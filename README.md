@@ -18,7 +18,9 @@ Command line usage: `rostopic pub -1 cmd_vel geometry_msgs/Twist '{linear: {x: 0
 ## 2. Run spiking neural network models on SpiNNaker & build suitable SNN architectures
 
 
-## 3. Set up the interface to SpiNNaker
+## 3. Set up the (ROS) interface to SpiNNaker
+
+Use https://github.com/reiths/ros_spinnaker_interface
 
 ### Transform the pixel data from the camera to spikes and feed them into the network
 
