@@ -10,22 +10,22 @@
 #include <opencv2/imgproc/imgproc.hpp>
 //Include headers for OpenCV GUI handling
 #include <opencv2/highgui/highgui.hpp>
- 
+
 //Store all constants for image encodings in the enc namespace to be used later.
 namespace enc = sensor_msgs::image_encodings;
- 
+
 //Declare a string with the name of the window that we will create using OpenCV where processed images will be displayed.
 static const char WINDOW[] = "Image Processed";
- 
+
 //Use method of ImageTransport to create image publisher
 image_transport::Publisher pub;
- 
+
 //This function is called everytime a new image is published
 void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 {
     //Convert from the ROS image message to a CvImage suitable for working with OpenCV for processing
     cv_bridge::CvImagePtr cv_ptr;
-	
+
     try
     {
         //Always copy, returning a mutable CvImage
@@ -38,11 +38,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
         ROS_ERROR("tutorialROSOpenCV::main.cpp::cv_bridge exception: %s", e.what());
         return;
     }
- 
+
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 //////////////////// Do the image processing ///////////////////////////
-	
+
 	int threshold_value=50;
 	int max_binary_value=255;
 	int threshold_type=0;
@@ -51,7 +51,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 	GaussianBlur(cv_ptr->image, cv_ptr->image,cv::Size(7,7),0,0);
 	// transform the image to gray scale
 	cvtColor(cv_ptr->image, cv_ptr->image, CV_RGB2GRAY);
-	// threshold the image (could alternatively use adaptivThreshold() ) 
+	// threshold the image (could alternatively use adaptivThreshold() )
 	threshold(cv_ptr->image,cv_ptr->image,threshold_value,max_binary_value,threshold_type);
 	int erosion_size=3;
 	int erosion_type=cv::MORPH_RECT;
@@ -59,7 +59,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 	erode(cv_ptr->image,cv_ptr->image,element);
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
- 
+
     //Display the image using OpenCV
     cv::imshow(WINDOW, cv_ptr->image);
     //Add some delay in miliseconds. The function only works if there is at least one HighGUI window created and the window is active. If there are several HighGUI windows, any of them can be active.
@@ -73,7 +73,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
     //Convert the CvImage to a ROS image message and publish it on the "camera/image_processed" topic.
         pub.publish(cv_ptr->toImageMsg());
 }
- 
+
 /**
 * This tutorial demonstrates simple image conversion between ROS image message and OpenCV formats and image processing
 */
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     * subscribe() returns an image_transport::Subscriber object, that you must hold on to until you want to unsubscribe.
     * When the Subscriber object is destructed, it will automatically unsubscribe from the "camera/image_raw" base topic.
     */
-        image_transport::Subscriber sub = it.subscribe("camera/image_raw", 1, imageCallback);
+        image_transport::Subscriber sub = it.subscribe("cv_camera/image_raw", 1, imageCallback);
     //OpenCV HighGUI call to destroy a display window on shut-down.
     cv::destroyWindow(WINDOW);
     /**
@@ -136,6 +136,5 @@ int main(int argc, char **argv)
         ros::spin();
     //ROS_INFO is the replacement for printf/cout.
     ROS_INFO("tutorialROSOpenCV::main.cpp::No error.");
- 
-}
 
+}

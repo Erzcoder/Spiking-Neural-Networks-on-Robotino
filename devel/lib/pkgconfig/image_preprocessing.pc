@@ -1,0 +1,8 @@
+prefix=/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel
+
+Name: image_preprocessing
+Description: Description of image_preprocessing
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel/lib 
+Requires: 

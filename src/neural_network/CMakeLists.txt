@@ -139,10 +139,10 @@ include_directories(
 # add_dependencies(neural_network_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(neural_network_node
-   ${catkin_LIBRARIES}
-   ${OpenCV_LIBS}
- )
+ #target_link_libraries(neural_network_node
+ #  ${catkin_LIBRARIES}
+  # ${OpenCV_LIBS}
+ #)
 
 #############
 ## Install ##

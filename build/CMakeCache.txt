@@ -14,8 +14,53 @@
 # EXTERNAL cache entries
 ########################
 
+//The threading library used by boost-thread
+BOOST_THREAD_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpthread.so
+
 //Build shared libraries (DLLs).
 BUILD_SHARED_LIBS:BOOL=ON
+
+//Boost atomic library (debug)
+Boost_ATOMIC_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_atomic.so
+
+//Boost atomic library (release)
+Boost_ATOMIC_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_atomic.so
+
+//Boost chrono library (debug)
+Boost_CHRONO_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_chrono.so
+
+//Boost chrono library (release)
+Boost_CHRONO_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_chrono.so
+
+//Boost date_time library (debug)
+Boost_DATE_TIME_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_date_time.so
+
+//Boost date_time library (release)
+Boost_DATE_TIME_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_date_time.so
+
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=Boost_DIR-NOTFOUND
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=/usr/include
+
+//Boost library directory DEBUG
+Boost_LIBRARY_DIR_DEBUG:PATH=/usr/lib/x86_64-linux-gnu
+
+//Boost library directory RELEASE
+Boost_LIBRARY_DIR_RELEASE:PATH=/usr/lib/x86_64-linux-gnu
+
+//Boost system library (debug)
+Boost_SYSTEM_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_system.so
+
+//Boost system library (release)
+Boost_SYSTEM_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_system.so
+
+//Boost thread library (debug)
+Boost_THREAD_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
+
+//Boost thread library (release)
+Boost_THREAD_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libboost_thread.so
 
 //List of ';' separated packages to exclude
 CATKIN_BLACKLIST_PACKAGES:STRING=
@@ -219,6 +264,23 @@ LSB_RELEASE_EXECUTABLE:FILEPATH=/usr/bin/lsb_release
 //Path to a program.
 NOSETESTS:FILEPATH=/usr/bin/nosetests-2.7
 
+//Path where debug 3rdparty OpenCV dependencies are located
+OpenCV_3RDPARTY_LIB_DIR_DBG:PATH=/opt/ros/kinetic/share/OpenCV-3.1.0-dev/3rdparty/lib
+
+//Path where release 3rdparty OpenCV dependencies are located
+OpenCV_3RDPARTY_LIB_DIR_OPT:PATH=/opt/ros/kinetic/share/OpenCV-3.1.0-dev/3rdparty/lib
+
+OpenCV_CONFIG_PATH:STRING=/opt/ros/kinetic/share/OpenCV-3.1.0-dev
+
+//The directory containing a CMake configuration file for OpenCV.
+OpenCV_DIR:PATH=/opt/ros/kinetic/share/OpenCV-3.1.0-dev
+
+//Path where debug OpenCV libraries are located
+OpenCV_LIB_DIR_DBG:PATH=
+
+//Path where release OpenCV libraries are located
+OpenCV_LIB_DIR_OPT:PATH=
+
 //Path to a program.
 PYTHON_EXECUTABLE:FILEPATH=/usr/bin/python
 
@@ -249,11 +311,44 @@ _CATKIN_GTEST_INCLUDE:FILEPATH=/usr/include/gtest/gtest.h
 //Path to a file.
 _CATKIN_GTEST_SRC:FILEPATH=/usr/src/gtest/src/gtest.cc
 
+//Path to a file.
+_file_name:FILEPATH=/home/nicolas/Spiking-Neural-Networks-on-Robotino/src/cv_camera/test/no_yaml.test
+
+//The directory containing a CMake configuration file for bond.
+bond_DIR:PATH=/opt/ros/kinetic/share/bond/cmake
+
+//The directory containing a CMake configuration file for bondcpp.
+bondcpp_DIR:PATH=/opt/ros/kinetic/share/bondcpp/cmake
+
+//The directory containing a CMake configuration file for camera_info_manager.
+camera_info_manager_DIR:PATH=/opt/ros/kinetic/share/camera_info_manager/cmake
+
 //The directory containing a CMake configuration file for catkin.
-catkin_DIR:PATH=/usr/share/catkin/cmake
+catkin_DIR:PATH=/opt/ros/kinetic/share/catkin/cmake
+
+//The directory containing a CMake configuration file for class_loader.
+class_loader_DIR:PATH=/opt/ros/kinetic/share/class_loader/cmake
+
+//The directory containing a CMake configuration file for cpp_common.
+cpp_common_DIR:PATH=/opt/ros/kinetic/share/cpp_common/cmake
 
 //The directory containing a CMake configuration file for cv_bridge.
-cv_bridge_DIR:PATH=cv_bridge_DIR-NOTFOUND
+cv_bridge_DIR:PATH=/opt/ros/kinetic/share/cv_bridge/cmake
+
+//Value Computed by CMake
+cv_camera_BINARY_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/cv_camera
+
+//Dependencies for the target
+cv_camera_LIB_DEPENDS:STATIC=general;/opt/ros/kinetic/lib/libimage_transport.so;general;/opt/ros/kinetic/lib/libmessage_filters.so;general;/opt/ros/kinetic/lib/libcv_bridge.so;general;/opt/ros/kinetic/lib/libopencv_xphoto3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_xobjdetect3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ximgproc3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_xfeatures2d3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_tracking3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_text3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_surface_matching3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_structured_light3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_stereo3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_saliency3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_rgbd3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_reg3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_plot3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_optflow3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_line_descriptor3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_hdf3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_fuzzy3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_face3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_dpm3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_dnn3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_datasets3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_cvv3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ccalib3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_bioinspired3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_bgsegm3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_aruco3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_viz3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_videostab3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_videoio3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_video3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_superres3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_stitching3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_shape3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_photo3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_objdetect3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ml3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_imgproc3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_imgcodecs3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_highgui3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_flann3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_features2d3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_core3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_calib3d3.so.3.1.0;general;/opt/ros/kinetic/lib/libnodeletlib.so;general;/opt/ros/kinetic/lib/libbondcpp.so;general;/usr/lib/x86_64-linux-gnu/libuuid.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/kinetic/lib/libclass_loader.so;general;/usr/lib/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/kinetic/lib/libroslib.so;general;/opt/ros/kinetic/lib/libcamera_info_manager.so;general;/opt/ros/kinetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libboost_signals.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/opt/ros/kinetic/lib/librosconsole.so;general;/opt/ros/kinetic/lib/librosconsole_log4cxx.so;general;/opt/ros/kinetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so;general;/opt/ros/kinetic/lib/libxmlrpcpp.so;general;/opt/ros/kinetic/lib/libroscpp_serialization.so;general;/opt/ros/kinetic/lib/librostime.so;general;/opt/ros/kinetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;opencv_xphoto;general;opencv_xobjdetect;general;opencv_ximgproc;general;opencv_xfeatures2d;general;opencv_tracking;general;opencv_text;general;opencv_surface_matching;general;opencv_structured_light;general;opencv_stereo;general;opencv_saliency;general;opencv_rgbd;general;opencv_reg;general;opencv_plot;general;opencv_optflow;general;opencv_line_descriptor;general;opencv_hdf;general;opencv_fuzzy;general;opencv_face;general;opencv_dpm;general;opencv_dnn;general;opencv_datasets;general;opencv_cvv;general;opencv_ccalib;general;opencv_bioinspired;general;opencv_bgsegm;general;opencv_aruco;general;opencv_viz;general;opencv_videostab;general;opencv_videoio;general;opencv_video;general;opencv_superres;general;opencv_stitching;general;opencv_shape;general;opencv_photo;general;opencv_objdetect;general;opencv_ml;general;opencv_imgproc;general;opencv_imgcodecs;general;opencv_highgui;general;opencv_flann;general;opencv_features2d;general;opencv_core;general;opencv_calib3d;
+
+//Value Computed by CMake
+cv_camera_SOURCE_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/src/cv_camera
+
+//Dependencies for the target
+cv_camera_nodelet_LIB_DEPENDS:STATIC=general;/opt/ros/kinetic/lib/libimage_transport.so;general;/opt/ros/kinetic/lib/libmessage_filters.so;general;/opt/ros/kinetic/lib/libcv_bridge.so;general;/opt/ros/kinetic/lib/libopencv_xphoto3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_xobjdetect3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ximgproc3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_xfeatures2d3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_tracking3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_text3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_surface_matching3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_structured_light3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_stereo3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_saliency3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_rgbd3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_reg3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_plot3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_optflow3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_line_descriptor3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_hdf3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_fuzzy3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_face3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_dpm3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_dnn3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_datasets3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_cvv3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ccalib3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_bioinspired3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_bgsegm3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_aruco3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_viz3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_videostab3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_videoio3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_video3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_superres3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_stitching3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_shape3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_photo3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_objdetect3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_ml3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_imgproc3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_imgcodecs3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_highgui3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_flann3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_features2d3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_core3.so.3.1.0;general;/opt/ros/kinetic/lib/libopencv_calib3d3.so.3.1.0;general;/opt/ros/kinetic/lib/libnodeletlib.so;general;/opt/ros/kinetic/lib/libbondcpp.so;general;/usr/lib/x86_64-linux-gnu/libuuid.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/kinetic/lib/libclass_loader.so;general;/usr/lib/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/kinetic/lib/libroslib.so;general;/opt/ros/kinetic/lib/libcamera_info_manager.so;general;/opt/ros/kinetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libboost_signals.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/opt/ros/kinetic/lib/librosconsole.so;general;/opt/ros/kinetic/lib/librosconsole_log4cxx.so;general;/opt/ros/kinetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so;general;/opt/ros/kinetic/lib/libxmlrpcpp.so;general;/opt/ros/kinetic/lib/libroscpp_serialization.so;general;/opt/ros/kinetic/lib/librostime.so;general;/opt/ros/kinetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;cv_camera;
+
+//The directory containing a CMake configuration file for geometry_msgs.
+geometry_msgs_DIR:PATH=/opt/ros/kinetic/share/geometry_msgs/cmake
 
 //Value Computed by CMake
 gtest_BINARY_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/gtest
@@ -286,11 +381,105 @@ image_preprocessing_BINARY_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-R
 //Value Computed by CMake
 image_preprocessing_SOURCE_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/src/image_preprocessing
 
+//The directory containing a CMake configuration file for image_transport.
+image_transport_DIR:PATH=/opt/ros/kinetic/share/image_transport/cmake
+
+//Path to a library.
+lib:FILEPATH=/opt/ros/kinetic/lib/libroslib.so
+
+//The directory containing a CMake configuration file for message_filters.
+message_filters_DIR:PATH=/opt/ros/kinetic/share/message_filters/cmake
+
+//The directory containing a CMake configuration file for message_runtime.
+message_runtime_DIR:PATH=/opt/ros/kinetic/share/message_runtime/cmake
+
+//Value Computed by CMake
+neural_network_BINARY_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/neural_network
+
+//Value Computed by CMake
+neural_network_SOURCE_DIR:STATIC=/home/nicolas/Spiking-Neural-Networks-on-Robotino/src/neural_network
+
+//The directory containing a CMake configuration file for nodelet.
+nodelet_DIR:PATH=/opt/ros/kinetic/share/nodelet/cmake
+
+//The directory containing a CMake configuration file for pluginlib.
+pluginlib_DIR:PATH=/opt/ros/kinetic/share/pluginlib/cmake
+
+//The directory containing a CMake configuration file for rosconsole.
+rosconsole_DIR:PATH=/opt/ros/kinetic/share/rosconsole/cmake
+
+//The directory containing a CMake configuration file for roscpp.
+roscpp_DIR:PATH=/opt/ros/kinetic/share/roscpp/cmake
+
+//The directory containing a CMake configuration file for roscpp_serialization.
+roscpp_serialization_DIR:PATH=/opt/ros/kinetic/share/roscpp_serialization/cmake
+
+//The directory containing a CMake configuration file for roscpp_traits.
+roscpp_traits_DIR:PATH=/opt/ros/kinetic/share/roscpp_traits/cmake
+
+//The directory containing a CMake configuration file for rosgraph_msgs.
+rosgraph_msgs_DIR:PATH=/opt/ros/kinetic/share/rosgraph_msgs/cmake
+
+//The directory containing a CMake configuration file for roslib.
+roslib_DIR:PATH=/opt/ros/kinetic/share/roslib/cmake
+
+//The directory containing a CMake configuration file for roslint.
+roslint_DIR:PATH=/opt/ros/kinetic/share/roslint/cmake
+
+//The directory containing a CMake configuration file for rospy.
+rospy_DIR:PATH=/opt/ros/kinetic/share/rospy/cmake
+
+//The directory containing a CMake configuration file for rostest.
+rostest_DIR:PATH=/opt/ros/kinetic/share/rostest/cmake
+
+//The directory containing a CMake configuration file for rostime.
+rostime_DIR:PATH=/opt/ros/kinetic/share/rostime/cmake
+
+//The directory containing a CMake configuration file for sensor_msgs.
+sensor_msgs_DIR:PATH=/opt/ros/kinetic/share/sensor_msgs/cmake
+
+//The directory containing a CMake configuration file for smclib.
+smclib_DIR:PATH=/opt/ros/kinetic/share/smclib/cmake
+
+//The directory containing a CMake configuration file for std_msgs.
+std_msgs_DIR:PATH=/opt/ros/kinetic/share/std_msgs/cmake
+
+//The directory containing a CMake configuration file for xmlrpcpp.
+xmlrpcpp_DIR:PATH=/opt/ros/kinetic/share/xmlrpcpp/cmake
+
 
 ########################
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_ATOMIC_LIBRARY_DEBUG
+Boost_ATOMIC_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_ATOMIC_LIBRARY_RELEASE
+Boost_ATOMIC_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_CHRONO_LIBRARY_DEBUG
+Boost_CHRONO_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_CHRONO_LIBRARY_RELEASE
+Boost_CHRONO_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DATE_TIME_LIBRARY_DEBUG
+Boost_DATE_TIME_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DATE_TIME_LIBRARY_RELEASE
+Boost_DATE_TIME_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_INCLUDE_DIR
+Boost_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_LIBRARY_DIR_DEBUG
+Boost_LIBRARY_DIR_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_LIBRARY_DIR_RELEASE
+Boost_LIBRARY_DIR_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SYSTEM_LIBRARY_DEBUG
+Boost_SYSTEM_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SYSTEM_LIBRARY_RELEASE
+Boost_SYSTEM_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_DEBUG
+Boost_THREAD_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_THREAD_LIBRARY_RELEASE
+Boost_THREAD_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //catkin environment
 CATKIN_ENV:INTERNAL=/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/catkin_generated/env_cached.sh
 CATKIN_TEST_RESULTS_DIR:INTERNAL=/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_results
@@ -388,7 +577,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=3
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -446,10 +635,32 @@ GTEST_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 GTEST_MAIN_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: GTEST_MAIN_LIBRARY_DEBUG
 GTEST_MAIN_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_DBG
+OpenCV_3RDPARTY_LIB_DIR_DBG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_OPT
+OpenCV_3RDPARTY_LIB_DIR_OPT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCV_CONFIG_PATH
+OpenCV_CONFIG_PATH-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCV_LIB_DIR_DBG
+OpenCV_LIB_DIR_DBG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCV_LIB_DIR_OPT
+OpenCV_LIB_DIR_OPT-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PYTHON_EXECUTABLE
 PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
 //This needs to be in PYTHONPATH when 'setup.py install' is called.
 //  And it needs to match.  But setuptools won't tell us where
 // it will install things.
 PYTHON_INSTALL_DIR:INTERNAL=lib/python2.7/dist-packages
+//Components requested for this build tree.
+_Boost_COMPONENTS_SEARCHED:INTERNAL=atomic;chrono;date_time;system;thread
+//Last used Boost_INCLUDE_DIR value.
+_Boost_INCLUDE_DIR_LAST:INTERNAL=/usr/include
+//Last used Boost_LIBRARY_DIR_DEBUG value.
+_Boost_LIBRARY_DIR_DEBUG_LAST:INTERNAL=/usr/lib/x86_64-linux-gnu
+//Last used Boost_LIBRARY_DIR_RELEASE value.
+_Boost_LIBRARY_DIR_RELEASE_LAST:INTERNAL=/usr/lib/x86_64-linux-gnu
+//Last used Boost_NAMESPACE value.
+_Boost_NAMESPACE_LAST:INTERNAL=boost
+//Last used Boost_USE_MULTITHREADED value.
+_Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
 

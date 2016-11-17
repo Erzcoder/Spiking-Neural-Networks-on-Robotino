@@ -1,0 +1,8 @@
+prefix=/home/nicolas/Spiking-Neural-Networks-on-Robotino/install
+
+Name: cv_camera
+Description: Description of cv_camera
+Version: 0.1.0
+Cflags: -I/home/nicolas/Spiking-Neural-Networks-on-Robotino/install/include
+Libs: -L/home/nicolas/Spiking-Neural-Networks-on-Robotino/install/lib -lcv_camera
+Requires: image_transport roscpp cv_bridge sensor_msgs nodelet camera_info_manager

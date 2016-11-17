@@ -1,0 +1,8 @@
+prefix=/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel
+
+Name: neural_network
+Description: Description of neural_network
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel/lib 
+Requires: 
