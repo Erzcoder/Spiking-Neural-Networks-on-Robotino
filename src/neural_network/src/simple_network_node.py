@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 import pyNN.nest as p
 from pyNN.random import NumpyRNG, RandomDistribution
 from pyNN.utility import Timer
@@ -12,12 +13,12 @@ import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 
-def network():
+#def network():
 
-    rospy.init_node('simle_network', anonymous=True)
-    rate = rospy.Rate(10) # 10hz
-    rospy.Subscriber("camera/image_processed", Image, callback)
-    pub = rospy.Publisher('neural_command', double, queue_size=10)
+rospy.init_node('simple_network_node')
+rate = rospy.Rate(10) # 10hz
+rospy.Subscriber("camera/image_processed", Image, callback)
+pub = rospy.Publisher('neural_command', double, queue_size=10)
 
 
     '''
@@ -83,8 +84,8 @@ def callback(data):
 
     plt.savefig("neo_example.png")
 
-if __name__ == '__main__':
-    try:
-        network()
-    except rospy.ROSInterruptException:
-        pass
+#if __name__ == '__main__':
+ #   try:
+  #      network()
+   # except rospy.ROSInterruptException:
+    #    pass
