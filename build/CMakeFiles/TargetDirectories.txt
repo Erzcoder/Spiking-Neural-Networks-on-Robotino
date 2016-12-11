@@ -92,3 +92,10 @@
 /home/nicolas/Spiking-Neural-Networks-on-Robotino/build/neural_network/CMakeFiles/install/local.dir
 /home/nicolas/Spiking-Neural-Networks-on-Robotino/build/neural_network/CMakeFiles/test.dir
 /home/nicolas/Spiking-Neural-Networks-on-Robotino/build/neural_network/CMakeFiles/edit_cache.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/list_install_components.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/install.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/rebuild_cache.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/install/strip.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/install/local.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/test.dir
+/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/CMakeFiles/edit_cache.dir

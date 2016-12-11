@@ -120,6 +120,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/cv_camera/cmake_install.cmake")
   include("/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/image_preprocessing/cmake_install.cmake")
   include("/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/neural_network/cmake_install.cmake")
+  include("/home/nicolas/Spiking-Neural-Networks-on-Robotino/build/test_python_node/cmake_install.cmake")
 
 endif()
 

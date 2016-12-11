@@ -2102,6 +2102,24 @@ neural_network/preinstall:
 .PHONY : neural_network/preinstall
 
 #=============================================================================
+# Directory level rules for directory test_python_node
+
+# Convenience name for "all" pass in the directory.
+test_python_node/all:
+
+.PHONY : test_python_node/all
+
+# Convenience name for "clean" pass in the directory.
+test_python_node/clean:
+
+.PHONY : test_python_node/clean
+
+# Convenience name for "preinstall" pass in the directory.
+test_python_node/preinstall:
+
+.PHONY : test_python_node/preinstall
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.

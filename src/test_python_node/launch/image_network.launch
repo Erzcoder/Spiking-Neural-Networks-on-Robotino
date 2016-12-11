@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="cv_camera" pkg="cv_camera" type="cv_camera_node"/>
+	<node name="image_preprocessing" pkg="image_preprocessing" type="image_preprocessing_node"/>
+	<node name="test_python_node" pkg="test_python_node" type="test_python_node" />
+
+</launch>
