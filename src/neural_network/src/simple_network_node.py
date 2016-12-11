@@ -21,13 +21,13 @@ rospy.Subscriber("camera/image_processed", Image, callback)
 pub = rospy.Publisher('neural_command', double, queue_size=10)
 
 
-    '''
-    while not rospy.is_shutdown():
-        hello_str = "hello world %s" % rospy.get_time()
-        rospy.loginfo(hello_str)
-        pub.publish(hello_str)
-        rate.sleep()
-    '''
+'''
+while not rospy.is_shutdown():
+hello_str = "hello world %s" % rospy.get_time()
+rospy.loginfo(hello_str)
+pub.publish(hello_str)
+rate.sleep()
+'''
 
 
 def callback(data):

@@ -1,0 +1,2 @@
+cv_camera:image_preprocessing:neural_network
+-DCATKIN_DEVEL_PREFIX=/home/ubuntu/Spiking-Neural-Networks-on-Robotino/devel -DCMAKE_INSTALL_PREFIX=/home/ubuntu/Spiking-Neural-Networks-on-Robotino/install -G Unix Makefiles
