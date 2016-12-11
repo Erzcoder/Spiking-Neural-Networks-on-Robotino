@@ -15,19 +15,13 @@ from sensor_msgs.msg import Image
 
 #def network():
 
-rospy.init_node('simple_network_node')
-rate = rospy.Rate(10) # 10hz
-rospy.Subscriber("camera/image_processed", Image, callback)
-pub = rospy.Publisher('neural_command', double, queue_size=10)
+def network():
+    rospy.init_node('simple_network_node')
+    rate = rospy.Rate(10) # 10hz
+    rospy.Subscriber("camera/image_processed", Image, callback)
+    pub = rospy.Publisher('neural_command', String, queue_size=10)
 
 
-'''
-while not rospy.is_shutdown():
-hello_str = "hello world %s" % rospy.get_time()
-rospy.loginfo(hello_str)
-pub.publish(hello_str)
-rate.sleep()
-'''
 
 
 def callback(data):
@@ -69,6 +63,7 @@ def callback(data):
         plt.setp(plt.gca().get_xticklabels(), visible=False)
         plt.legend()
 
+    print("now plotting the network")
     n_panels = sum(a.shape[1] for a in pop_1_data.segments[0].analogsignalarrays) + 2
     plt.subplot(n_panels, 1, 1)
     plot_spiketrains(pop_1_data.segments[0])
@@ -82,10 +77,10 @@ def callback(data):
     plt.setp(plt.gca().get_xticklabels(), visible=True)#
     plt.show()
 
-    plt.savefig("neo_example.png")
+    plt.savefig("network_output.png")
 
-#if __name__ == '__main__':
- #   try:
-  #      network()
-   # except rospy.ROSInterruptException:
-    #    pass
+if __name__ == '__main__':
+    try:
+        network()
+    except rospy.ROSInterruptException:
+        pass

@@ -1,8 +1,0 @@
-prefix=/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel
-
-Name: test_python_node
-Description: Description of test_python_node
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/nicolas/Spiking-Neural-Networks-on-Robotino/devel/lib 
-Requires: 
