@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="talker" pkg="neural_network" type="talker.py"/>
+
+	<node name="neural_network" pkg="neural_network" type="simple_network_node.py" cwd="node"/>
+
+</launch>

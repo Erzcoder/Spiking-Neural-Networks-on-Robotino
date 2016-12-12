@@ -18,32 +18,20 @@ def network():
     rate = rospy.Rate(10) # 10hz
     rospy.Subscriber("camera/image_processed", Image, test_callback)
     #rospy.Subscriber("/chatter", String, callback)
-    rospy.Subscriber("/test_image", Image, test_callback)
+    rospy.Subscriber("test_image", Image, test_callback)
     pub = rospy.Publisher('neural_command', String, queue_size=10)
     rospy.loginfo('starting---------------')
     #rospy.loginfo('received message', message)
     #rospy.spin
-    while True:
-        rospy.loginfo_throttle(10, "This message will print every 10 seconds")
 
-
-def test_callback(data_input):
-    global message
-    message = data_input.data
-    msg_list = list(message)
-
-    msg_list[1] = int(message[1].encode('hex'),16)
-    #for i in
-    #msg_list = int(message.encode('hex'),16)
-
-    #print('============= Received image data.',message)
-    rospy.loginfo('=====received data %r', msg_list[1])
+    print('============= Received image data.')
+    rospy.loginfo('=====received data')
     timer = Timer()
     p.setup(timestep=0.1) # 0.1ms
 
     pop_1 = p.Population(1,p.IF_curr_exp, {}, label="pop_1")
     #input = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0,3,6]]}, label='input')
-    input = p.Population(1, p.SpikeSourcePoisson, {'rate':msg_list[1]})
+    input = p.Population(1, p.SpikeSourcePoisson, {'rate':message[1]/100.0})
     stat_syn = p.StaticSynapse(weight =50.0, delay=1)
     input_proj = p.Projection(input, pop_1, p.OneToOneConnector(),synapse_type=stat_syn, receptor_type='excitatory')
 
@@ -89,8 +77,15 @@ def test_callback(data_input):
     plt.xlabel("time (%s)" % array.times.units._dimensionality.string)
     plt.setp(plt.gca().get_xticklabels(), visible=True)#
     plt.show()
-    #fig1.show()
+    fig1.show()
     plt.savefig("~/Spiking-Neural-Networks-on-Robotino/network_output.jpg")
+
+
+
+
+def test_callback(data):
+    global message
+    message = data.data
 
 if __name__ == '__main__':
     try:
