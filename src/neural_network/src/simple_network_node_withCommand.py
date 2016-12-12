@@ -7,7 +7,6 @@ from pyNN.utility import Timer
 import matplotlib.pyplot as plt
 import pylab
 import numpy as np
-from scipy import signal
 
 
 import rospy
@@ -28,14 +27,6 @@ def network():
     while True:
         rospy.loginfo_throttle(10, "This message will print every 10 seconds")
 
-def gaussian_convolution(spikes,dt):
-    #----------- works only after the simulation has run; not online!!!!!!!!
-    kernel_size = 10
-    gaussian_kernel = signal.gaussian(kernel_size, std=2)
-    scaling_factor = 1/np.sum(gaussian_kernel)*1/dt
-    gauss_rate = np.convolve(spikes,gaussian_kernel,mode='same')*scaling_factor
-    mean_rate = np.mean(gauss_rate)
-    return mean_rate
 
 def test_callback(data_input):
     global message
@@ -49,9 +40,7 @@ def test_callback(data_input):
     #print('============= Received image data.',message)
     rospy.loginfo('=====received data %r', msg_list[1])
     timer = Timer()
-    dt = 0.1
-    p.setup(timestep=dt) # 0.1ms
-
+    p.setup(timestep=0.1) # 0.1ms
 
     pop_1 = p.Population(1,p.IF_curr_exp, {}, label="pop_1")
     #input = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0,3,6]]}, label='input')
@@ -64,18 +53,13 @@ def test_callback(data_input):
     pop_1_data= pop_1.get_data()
 
 
-    #
-    spikes = pop_1_data.segments[0].spiketrains[0]
-    mean_rate = int(gaussian_convolution(spikes,dt))
-    rospy.loginfo('=====mean_rate %r', mean_rate) # mean_rate = 64
-    rate_command = mean_rate/100.
     # rate coding of the spike train
 
     pub = rospy.Publisher('neural_command', Twist, queue_size=10)
     # construct the output command
     command = Twist()
     command.linear.x = 1.0
-    command.angular.y = rate_command
+    command.angular.y = 0.1
     pub.publish(command)
 
     rospy.loginfo('=====send command %r', command.angular.y)
