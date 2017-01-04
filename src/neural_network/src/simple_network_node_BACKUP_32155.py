@@ -17,16 +17,21 @@ from geometry_msgs.msg import Twist
 
 def network():
     rospy.init_node('simple_network_node')
-    rate = rospy.Rate(10) # 10hz
+    #rate = rospy.Rate(10) # 10hz
     rospy.Subscriber("camera/image_processed", Image, test_callback)
     rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
     #rospy.Subscriber("/chatter", String, callback)
     rospy.Subscriber("/test_image", Image, test_callback)
 
     rospy.loginfo('starting---------------')
+<<<<<<< HEAD
+    #rospy.loginfo('received message', message)
     rospy.spin()
     #while True:
     #    rospy.loginfo_throttle(10, "This message will print every 10 seconds")
+=======
+    rospy.spin()
+>>>>>>> 920ebdd436f19cc488012c792bbd46e7a0a0ada9
 
 def gaussian_convolution(spikes,dt):
     #----------- works only after the simulation has run; not online!!!!!!!!

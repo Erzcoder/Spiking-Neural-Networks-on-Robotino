@@ -24,6 +24,7 @@ def network():
     rospy.Subscriber("/test_image", Image, test_callback)
 
     rospy.loginfo('starting---------------')
+    #rospy.loginfo('received message', message)
     rospy.spin()
     #while True:
     #    rospy.loginfo_throttle(10, "This message will print every 10 seconds")

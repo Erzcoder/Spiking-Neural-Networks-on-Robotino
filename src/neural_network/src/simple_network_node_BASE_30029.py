@@ -19,14 +19,14 @@ def network():
     rospy.init_node('simple_network_node')
     rate = rospy.Rate(10) # 10hz
     rospy.Subscriber("camera/image_processed", Image, test_callback)
-    rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
     #rospy.Subscriber("/chatter", String, callback)
     rospy.Subscriber("/test_image", Image, test_callback)
 
     rospy.loginfo('starting---------------')
-    rospy.spin()
-    #while True:
-    #    rospy.loginfo_throttle(10, "This message will print every 10 seconds")
+    #rospy.loginfo('received message', message)
+    #rospy.spin
+    while True:
+        rospy.loginfo_throttle(10, "This message will print every 10 seconds")
 
 def gaussian_convolution(spikes,dt):
     #----------- works only after the simulation has run; not online!!!!!!!!
@@ -63,17 +63,19 @@ def test_callback(data_input):
     p.run(10)
     pop_1_data= pop_1.get_data()
 
+
+    #
     spikes = pop_1_data.segments[0].spiketrains[0]
     mean_rate = int(gaussian_convolution(spikes,dt))
     rospy.loginfo('=====mean_rate %r', mean_rate) # mean_rate = 64
-    rate_command = mean_rate
+    rate_command = mean_rate/100.
     # rate coding of the spike train
 
-    pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=10)
+    pub = rospy.Publisher('neural_command', Twist, queue_size=10)
     # construct the output command
     command = Twist()
-    command.linear.x = rate_command*0.02
-    command.angular.z = rate_command/50000.
+    command.linear.x = 1.0
+    command.angular.y = rate_command
     pub.publish(command)
 
     rospy.loginfo('=====send command %r', command.angular.y)
