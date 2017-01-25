@@ -21,7 +21,7 @@ def network():
     rospy.Subscriber("camera/image_processed", Image, test_callback)
     rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
     #rospy.Subscriber("/chatter", String, callback)
-    rospy.Subscriber("/learning_input", Image, test_callback)
+    rospy.Subscriber("/test_image", Image, test_callback)
 
     rospy.loginfo('starting---------------')
     rospy.spin()
@@ -29,9 +29,7 @@ def network():
     #    rospy.loginfo_throttle(10, "This message will print every 10 seconds")
 
 def gaussian_convolution(spikes,dt):
-    #---- takes a spiketrain and the simulation time constant
-    #     and computes the smoothed spike rate
-    #-----works only after the simulation has run; not online!!!!!!!!
+    #----------- works only after the simulation has run; not online!!!!!!!!
     kernel_size = 10
     gaussian_kernel = signal.gaussian(kernel_size, std=2)
     scaling_factor = 1/np.sum(gaussian_kernel)*1/dt
@@ -54,20 +52,25 @@ def test_callback(data_input):
     dt = 0.1
     p.setup(timestep=dt) # 0.1ms
 
-    #---------
-    reservoir = p.Population(100,p.IF_curr_exp, {}, label="reservoir")
+
     #input = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0,3,6]]}, label='input')
-    input = p.Population(1, p.SpikeSourcePoisson, {'rate':msg_list[1]})
+
+    n_input_neurons = 10
+    gaussian_kernel = signal.gaussian(n_input_neurons, std=1)
+
+
+    input = p.Population(n_input_neurons, p.SpikeSourcePoisson, {'rate':msg_list[1]})
+
+    pop_1 = p.Population(1,p.IF_curr_exp, {}, label="pop_1")
+
     stat_syn = p.StaticSynapse(weight =50.0, delay=1)
-    input_proj = p.Projection(input, reservoir, p.OneToOneConnector(),synapse_type=stat_syn, receptor_type='excitatory')
-
-
-
-    reservoir.record(['v','spikes'])
+    input_proj = p.Projection(input, pop_1, p.AllToAllConnector(),synapse_type=stat_syn, receptor_type='excitatory')
+    
+    pop_1.record(['v','spikes'])
     p.run(10)
-    reservoir_data= reservoir.get_data()
+    pop_1_data= pop_1.get_data()
 
-    spikes = reservoir_data.segments[0].spiketrains[0]
+    spikes = pop_1_data.segments[0].spiketrains[0]
     mean_rate = int(gaussian_convolution(spikes,dt))
     rospy.loginfo('=====mean_rate %r', mean_rate) # mean_rate = 64
     rate_command = mean_rate
@@ -109,11 +112,11 @@ def test_callback(data_input):
 
     print("now plotting the network---------------")
     rospy.loginfo('--------now plotting---------------')
-    n_panels = sum(a.shape[1] for a in reservoir_data.segments[0].analogsignalarrays) + 2
+    n_panels = sum(a.shape[1] for a in pop_1_data.segments[0].analogsignalarrays) + 2
     plt.subplot(n_panels, 1, 1)
-    plot_spiketrains(reservoir_data.segments[0])
+    plot_spiketrains(pop_1_data.segments[0])
     panel = 3
-    for array in reservoir_data.segments[0].analogsignalarrays:
+    for array in pop_1_data.segments[0].analogsignalarrays:
         for i in range(array.shape[1]):
             plt.subplot(n_panels, 1, panel)
             plot_signal(array, i, colour='bg'[panel%2])
