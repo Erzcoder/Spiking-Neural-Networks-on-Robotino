@@ -10,6 +10,7 @@ import numpy as np
 from scipy import signal
 
 
+
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
@@ -55,16 +56,54 @@ def test_callback(data_input):
     p.setup(timestep=dt) # 0.1ms
 
     #---------
-    reservoir = p.Population(100,p.IF_curr_exp, {}, label="reservoir")
     #input = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0,3,6]]}, label='input')
-    input = p.Population(1, p.SpikeSourcePoisson, {'rate':msg_list[1]})
-    stat_syn = p.StaticSynapse(weight =50.0, delay=1)
-    input_proj = p.Projection(input, reservoir, p.OneToOneConnector(),synapse_type=stat_syn, receptor_type='excitatory')
+    input = p.Population(9, p.SpikeSourcePoisson, {'rate':msg_list[1]})
+
+
+    reservoir_exc = p.Population(10,p.IF_curr_exp, {}, label="reservoir_exh")
+    reservoir_inh = p.Population(10,p.IF_curr_exp, {}, label="reservoir_inh")
+
+    stat_syn_exc = p.StaticSynapse(weight =5.0, delay=1)
+    stat_syn_inh = p.StaticSynapse(weight =20.0, delay=1)
+    stat_syn_input = p.StaticSynapse(weight =50.0, delay=1)
+
+
+    pconn = 0.01      # sparse connection probability
+
+    exc_conn = p.FixedProbabilityConnector(pconn, rng=rng)
+    inh_conn = p.FixedProbabilityConnector(pconn, rng=rng)
+    inp_conn = p.AllToAllConnector()
+    rout_conn = p.AllToAllConnector()
+
+    connections = {}
+    connections['e2e'] = p.Projection(reservoir_exc, reservoir_exc, exc_conn,
+                                    synapse_type=stat_syn_exc, receptor_type='excitatory')
+    connections['e2i'] = p.Projection(reservoir_exc, reservoir_inh, exc_conn,
+                                    synapse_type=stat_syn_exc,receptor_type='excitatory')
+    connections['i2e'] = p.Projection(reservoir_inh, reservoir_exc, inh_conn,
+                                    synapse_type=stat_syn_inh,receptor_type='inhibitory')
+    connections['i2i'] = p.Projection(reservoir_inh, reservoir_inh, inh_conn,
+                                    synapse_type=stat_syn_inh,receptor_type='inhibitory')
+
+
+    connections['inp2e'] = p.Projection(input_neuron, reservoir_exc, inp_conn,
+                                          synapse_type=stat_syn_input,receptor_type='excitatory')
+    connections['inp2i'] = p.Projection(input_neuron, reservoir_inh, inp_conn,
+                                          synapse_type=stat_syn_input,receptor_type='excitatory')
+
+    connections['e2rout'] = p.Projection(reservoir_exc, readout_neurons, rout_conn,
+                                          synapse_type=stat_syn_exc,receptor_type='excitatory')
+    connections['i2rout'] = p.Projection(reservoir_inh, readout_neurons, rout_conn,
+                                          synapse_type=stat_syn_inh,receptor_type='inhibitory')
+
+
+
+
 
 
 
     reservoir.record(['v','spikes'])
-    p.run(10)
+    p.run(50)
     reservoir_data= reservoir.get_data()
 
     spikes = reservoir_data.segments[0].spiketrains[0]
