@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch"/>
+	<node name="image_preprocessing" pkg="image_preprocessing" type="sim_img_preproc_pop"/>
+	<node name="neural_network" pkg="neural_network" type="population_coding_simple_network.py" cwd="node"/>
+
+</launch>

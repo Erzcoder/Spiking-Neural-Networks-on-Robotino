@@ -132,6 +132,8 @@ include_directories(
 
 ## Declare a C++ executable
  add_executable(image_preprocessing_node src/image_preprocessing_node.cpp)
+ add_executable(sim_img_preproc_pop src/sim_img_preproc_pop.cpp)
+ add_executable(img_preproc_pop src/img_preproc_pop.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -142,6 +144,16 @@ include_directories(
    ${catkin_LIBRARIES}
    ${OpenCV_LIBS}
  )
+target_link_libraries(sim_img_preproc_pop
+   ${catkin_LIBRARIES}
+   ${OpenCV_LIBS}
+ )
+
+target_link_libraries(img_preproc_pop
+   ${catkin_LIBRARIES}
+   ${OpenCV_LIBS}
+ )
+
 
 #############
 ## Install ##

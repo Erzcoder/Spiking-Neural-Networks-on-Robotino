@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 	<include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch"/>
-	<node name="talker" pkg="neural_network" type="talker.py"/>
+	<node name="image_preprocessing_pop" pkg="image_preprocessing" type="image_preprocessed_node_pop"/>
 
 	<node name="neural_network" pkg="neural_network" type="simple_network_node.py" cwd="node"/>
 

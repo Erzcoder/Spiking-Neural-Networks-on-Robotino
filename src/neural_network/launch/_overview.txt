@@ -1,0 +1,14 @@
+tested & working as intended:
+
+sim_image_network_pop.launch
+
+	images from gazebo; preprocessing with population coding; putting it into 		the simple network
+	TODO: population_coding_simple_network.py
+
+
+image_preprocessing_pop.launch
+
+
+
+
+		

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="cv_camera" pkg="cv_camera" type="cv_camera_node"/>
+	<node name="image_preprocessing" pkg="image_preprocessing" type="image_preprocessing_node"/>
+	<node name="neural_network" pkg="neural_network" type="simple_network_node.py" cwd="node"/>
+
+</launch>

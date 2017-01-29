@@ -1,0 +1,14 @@
+Why do you want to use SNNs to move along the line instead of easier lane-following techniques?
+
+
+
+- proof of concept that SNNS can be applied to mobile robotics
+- early guessing of the output before the whole input sequence has been presented to the network
+	--> together with DVS it allows for much faster reaction times
+- depends on earlier input not only on the current state --> smoother trajectories
+- learning -> 
+- Neuromorphic hardware for SNNs is much more energy efficient -> good for mobile robots + better suited for parellelization
+
+- sensorimotor mapping
+
+

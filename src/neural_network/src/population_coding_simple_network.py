@@ -18,8 +18,9 @@ from geometry_msgs.msg import Twist
 def network():
     rospy.init_node('simple_network_node')
     rate = rospy.Rate(10) # 10hz
-    rospy.Subscriber("camera/image_processed", Image, test_callback)
-    rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
+    #rospy.Subscriber("camera/image_processed", Image, test_callback)
+    #rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
+    rospy.Subscriber('camera/image_compressed', Image, test_callback)
     #rospy.Subscriber("/chatter", String, callback)
     rospy.Subscriber("/test_image", Image, test_callback)
 
@@ -40,9 +41,12 @@ def gaussian_convolution(spikes,dt):
 def test_callback(data_input):
     global message
     message = data_input.data
+    rospy.loginfo('=====received data %r', message)
+
     msg_list = list(message)
 
-    msg_list[1] = int(message[1].encode('hex'),16)
+    msg_list= [int(msg.encode('hex'),16) for msg in message]
+    #
     #for i in
     #msg_list = int(message.encode('hex'),16)
 
@@ -55,17 +59,16 @@ def test_callback(data_input):
 
     #input = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0,3,6]]}, label='input')
 
-    n_input_neurons = 10
-    gaussian_kernel = signal.gaussian(n_input_neurons, std=1)
+    n_input_neurons = len(msg_list)  #/4
+    rospy.loginfo('====length of input image %r', n_input_neurons)
 
-
-    input = p.Population(n_input_neurons, p.SpikeSourcePoisson, {'rate':msg_list[1]})
+    input = p.Population(n_input_neurons, p.SpikeSourcePoisson, {'rate':msg_list})
 
     pop_1 = p.Population(1,p.IF_curr_exp, {}, label="pop_1")
 
     stat_syn = p.StaticSynapse(weight =50.0, delay=1)
     input_proj = p.Projection(input, pop_1, p.AllToAllConnector(),synapse_type=stat_syn, receptor_type='excitatory')
-    
+
     pop_1.record(['v','spikes'])
     p.run(10)
     pop_1_data= pop_1.get_data()
