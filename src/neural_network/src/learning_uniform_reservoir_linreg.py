@@ -3,10 +3,7 @@ from pyNN.random import NumpyRNG, RandomDistribution
 
 import numpy as np
 from scipy import signal
-from sklearn import linear_model
-
-reservoir_exc=None
-reservoir_inh=None
+#from sklearn import linear_model
 
 def gaussian_convolution(spikes,dt):
     #---- takes a spiketrain and the simulation time constant
@@ -38,10 +35,10 @@ def generate_testImage(direction):
 # the output neurons
 def generate_labeledImages(nr):
 	labeledImages = []
-	for i in range(nr):
-		labeledImages.append((generate_testImage("right"), [10,0]))
-		#labeledImages.append((generate_testImage("middle"), [0,0]))
-		#labeledImages.append((generate_testImage("left"), [0,10]))
+	for i in range(nr/3):
+		labeledImages.append((generate_testImage("right"), [0,10]))
+		labeledImages.append((generate_testImage("middle"), [0,0]))
+		labeledImages.append((generate_testImage("left"), [10,0]))
 
 
 	return labeledImages
@@ -52,12 +49,10 @@ seed=8658764
 
 input_nr = 9
 readout_nr = 2
-reservoir_nr = 1
-#exc_nr = 20
-#inh_nr = 5
+reservoir_nr = 2
 
 simulation_time = 50.0
-dt = 0.1
+dt = 1
 
 p.setup(timestep=dt) # 0.1ms
 
@@ -104,7 +99,7 @@ connections['r2rout'] = p.Projection(reservoir, readout_neurons, rout_conn,
 ######################
 
 ####### Feed images to network and record #######
-images_nr = 10
+images_nr = 3 # Must be a factor of 3
 labeledImages = generate_labeledImages(images_nr)
 
 input_neurons.record(['spikes'])
@@ -118,8 +113,8 @@ y1 = []
 y2 = []
 i = 0
 for labeledImage in labeledImages:
-	#print('Image')
-	#print(labeledImage[0])
+	print('Image')
+	print(labeledImage[0])
 	input_neurons.set(rate=labeledImage[0])
 
 	p.run(simulation_time)
@@ -161,17 +156,13 @@ print(y2)
 
 ######### Fit weights to each output neuron with linear regression ###########
 
-regr = linear_model.LinearRegression()
-
-regr.fit(X, y1)
-w1 = regr.coef_
+w1 =  np.linalg.lstsq(X,y1)[0].tolist()
 
 # The coefficients
 print('Weights w1')
 print(w1)
 
-regr.fit(X, y2)
-w2 = regr.coef_
+w2 =  np.linalg.lstsq(X,y2)[0].tolist()
 
 print('Weights w2')
 print(w2)
