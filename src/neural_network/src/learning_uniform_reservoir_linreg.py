@@ -106,11 +106,10 @@ input_neurons.record(['spikes'])
 reservoir.record(['spikes'])
 readout_neurons.record(['spikes'])
 
-# 30 images x 25 neurons, contains avarage nr of spikes for each neuron 
 X = np.zeros( (images_nr,reservoir_nr) )
 # yi, expected nr of spikes for output neurons 
 y1 = [] #left images labels
-y2 = []#right images labels
+y2 = [] #right images labels
 i = 0
 for labeledImage in labeledImages:
 	print('Image')
@@ -119,20 +118,8 @@ for labeledImage in labeledImages:
 
 	p.run(simulation_time)
 
-
-	readout_neurons_data = readout_neurons.get_data(clear=True)
-	#print("rout 1")
-	#print(readout_neurons_data.segments[0].spiketrains[0])
-	#print("rout 2")
-	#print(readout_neurons_data.segments[0].spiketrains[1])
-
 	reservoir_data = reservoir.get_data(clear=True)
-	#print(reservoir_data.segments[0].spiketrains[0])
-	input_neurons_data = input_neurons.get_data(clear=True)
 
-
-	#print('reservoir')
-	#print(reservoir_data.segments[0].spiketrains[0])
 	mean_rates = []
 	for spiketrain in reservoir_data.segments[0].spiketrains:
 		mean_rate = spike_mean_rate(spiketrain, simulation_time)
@@ -200,12 +187,8 @@ connections['r2rout'].set(weight=w)
 
 p.run(simulation_time)
 
-#reservoir_data = reservoir.get_data(clear=True)
-#print(reservoir_data.segments[0].spiketrains[0])
-
 readout_neurons_data = readout_neurons.get_data(clear=True)
 strains = readout_neurons_data.segments[0].spiketrains
-#print(strains[0])
 
 print('Mean rate output neurons after change of weights')
 print('(' + str(spike_mean_rate(strains[0], simulation_time)) + \
