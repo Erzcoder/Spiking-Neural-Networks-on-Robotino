@@ -109,8 +109,8 @@ readout_neurons.record(['spikes'])
 # 30 images x 25 neurons, contains avarage nr of spikes for each neuron 
 X = np.zeros( (images_nr,reservoir_nr) )
 # yi, expected nr of spikes for output neurons 
-y1 = []
-y2 = []
+y1 = [] #left images labels
+y2 = []#right images labels
 i = 0
 for labeledImage in labeledImages:
 	print('Image')
