@@ -1,16 +1,4 @@
-
-
-class param:
-	seed = 8658764		# Seed for reproduction of random number
-	input_nr = 9		# Number of input neurons
-	readout_nr = 2		# Number of readout neurons
-	reservoir_nr = 2	# Number of reservour neurons
-	simulation_time = 200.0 # Simulation time for each input
-	dt = 1				# Timestep in simulation
-	res_pconn = 0.01	# sparse connection probability for reservoir
-	images_nr = 3	 	# Number of training images. Must be a factor of 3
-
-
+import numpy as np
 
 def gaussian_convolution(spikes,dt):
     #---- takes a spiketrain and the simulation time constant
@@ -27,7 +15,7 @@ def spike_mean_rate(spikes, sim_time):
 	return len(spikes) / sim_time
 
 def generate_testImage(direction):
-	potential = 10
+	potential = 1
 	if direction=="left":
 		return [potential,0,0,potential,0,0,potential,0,0]
 	elif direction=='middle':
@@ -46,14 +34,58 @@ def generate_labeledImages(nr):
 		labeledImages.append((generate_testImage("right"), [0,10]))
 		labeledImages.append((generate_testImage("middle"), [0,0]))
 		labeledImages.append((generate_testImage("left"), [10,0]))
-
-
+		
 	return labeledImages
 
 # title: title of result
 # strains: spiking trains
-# stime: simulation time
-def print_mean_spike_rate(title, strains, stime):
+def print_mean_spike_rate(title, strains):
 	print(title)
-	print('(' + str(spike_mean_rate(strains[0], stime)) + \
-	',' + str(spike_mean_rate(strains[1], stime)) + ')')
+	print('(' + str(spike_mean_rate(strains[0], param.simulation_time)) + \
+	',' + str(spike_mean_rate(strains[1], param.simulation_time)) + ')')
+
+
+def compute_weights(X, rout_left, rout_right):
+	######### Fit weights to each output neuron with linear regression ###########
+
+	w1 = np.linalg.lstsq(X.T.dot(X) + 0.1*np.identity(param.reservoir_nr), X.T.dot(rout_left))[0].tolist()
+
+	# The coefficients
+	print('Weights w1 reservoir - readout neuron left')
+	print(w1)
+
+	w2 = np.linalg.lstsq(X.T.dot(X) + 0.1*np.identity(param.reservoir_nr), X.T.dot(rout_right))[0].tolist()
+
+	print('Weights w2 reservoir - readout neuron right')
+	print(w2)
+
+	# Connection['r2rout'] looks like
+	# [ [r0, rout0, value], [r0, rout1, v], [r1, rout0, v] ... ]
+	w = []
+	for i in range(param.reservoir_nr):
+		w.append(w1[i])
+		w.append(w2[i])
+
+	return w
+
+
+class param:
+	seed = 8658764			# Seed for reproduction of random number
+	input_nr = 9			# Number of input neurons
+	readout_nr = 2			# Number of readout neurons
+	reservoir_nr = 5		# Number of reservour neurons
+	simulation_time = 200.0 # Simulation time for each input
+	dt = 1					# Timestep in simulation
+	res_pconn = 0.01		# sparse connection probability for reservoir
+	images_train_nr = 9		# Number of training images to train with, 
+							# Must be a factor of 3
+	images_test_nr = 9  	# Number of test images
+	images_train = generate_labeledImages(images_train_nr)
+	images_test = generate_labeledImages(images_test_nr)
+
+
+
+
+
+
+

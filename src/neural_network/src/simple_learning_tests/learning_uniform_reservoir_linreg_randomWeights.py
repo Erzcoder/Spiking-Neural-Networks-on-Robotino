@@ -4,12 +4,21 @@ from pyNN.random import NumpyRNG, RandomDistribution
 import numpy as np
 from scipy import signal
 
-from common import spike_mean_rate, generate_labeledImages, print_mean_spike_rate
+from common import (
+spike_mean_rate, 
+generate_labeledImages, 
+print_mean_spike_rate, 
+compute_weights
+)
 from common import param
 
+# All-to-all connections between input and reservoir
+# Random weights between input and reservoir
+# Uniform weights inside reservoir
+# Uniform reservoir (all excitatory neurons)
+
+
 p.setup(timestep=param.dt)
-
-
 
 ###### Neurons #######
 
@@ -44,7 +53,7 @@ connections['r2r'] = p.Projection(reservoir, reservoir, res_conn,
 connections['inp2r'] = p.Projection(input_neurons, reservoir, inp_conn,
                                       synapse_type=stat_syn_input,receptor_type='excitatory')
 
-print(gamma.next(param.input_nr*param.reservoir_nr))
+#print(gamma.next(param.input_nr*param.reservoir_nr))
 connections['inp2r'].set(weight=50*gamma.next(param.input_nr*param.reservoir_nr))
 
 connections['r2rout'] = p.Projection(reservoir, readout_neurons, rout_conn,
@@ -55,20 +64,17 @@ connections['r2rout'] = p.Projection(reservoir, readout_neurons, rout_conn,
 ######################
 
 ####### Feed images to network and record #######
-labeledImages = generate_labeledImages(param.images_nr)
 
 input_neurons.record(['spikes'])
 reservoir.record(['spikes'])
 readout_neurons.record(['spikes'])
 
-X = np.zeros( (param.images_nr,param.reservoir_nr) )
+X = np.zeros( (param.images_train_nr,param.reservoir_nr) )
 # Expected nr of spikes for readout neurons 
 rout_left = [] #left images labels
 rout_right = [] #right images labels
 i = 0
-for labeledImage in labeledImages:
-	print('Image')
-	print(labeledImage[0])
+for labeledImage in param.images_train:
 	input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]})
 
 	p.run(param.simulation_time)
@@ -90,60 +96,23 @@ for labeledImage in labeledImages:
 
 print('Average spike matrix X')
 print(X)
-print('Readout neuron left labels')
-print(rout_left)
-print('Readout neuron right labels')
-print(rout_right)
 
 
-######### Fit weights to each output neuron with linear regression ###########
-
-w1 = np.linalg.lstsq(X.T.dot(X) + 0.1*np.identity(param.reservoir_nr), X.T.dot(rout_left))[0].tolist()
-
-# The coefficients
-print('Weights w1 reservoir - readout neuron left')
-print(w1)
-
-w2 = np.linalg.lstsq(X.T.dot(X) + 0.1*np.identity(param.reservoir_nr), X.T.dot(rout_right))[0].tolist()
-
-print('Weights w2 reservoir - readout neuron right')
-print(w2)
-
-#####################
-
-
+w = compute_weights(X, rout_left, rout_right)
+connections['r2rout'].set(weight=w)
 
 ######### Test accuracy ###########
 
 print("\nTesting accuracy\n")
-print("Test Image")
-image = labeledImages[0][0]
-print(image)
 
-#input_neurons.set(rate=image)
-input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]})
-p.run(param.simulation_time)
+nr_correct = 0 # TODO: Use this to find ratio of correct output
+for labeledImage in param.images_test:
+	print('Image')
+	print(labeledImage[0])
+	input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]})
+	p.run(param.simulation_time)
 
-readout_neurons_data = readout_neurons.get_data(clear=True)
-strains = readout_neurons_data.segments[0].spiketrains
+	readout_neurons_data = readout_neurons.get_data(clear=True)
+	strains = readout_neurons_data.segments[0].spiketrains
 
-print_mean_spike_rate('Mean rate output neurons before change of weights', 
-					strains, param.simulation_time)
-
-
-# Connection['r2rout'] looks like
-# [ [r0, rout0, value], [r0, rout1, v], [r1, rout0, v] ... ]
-w = []
-for i in range(param.reservoir_nr):
-	w.append(w1[i])
-	w.append(w2[i])
-
-connections['r2rout'].set(weight=w)
-
-p.run(param.simulation_time)
-
-readout_neurons_data = readout_neurons.get_data(clear=True)
-strains = readout_neurons_data.segments[0].spiketrains
-
-print_mean_spike_rate('Mean rate output neurons after change of weights', 
-					strains, param.simulation_time)
+	print_mean_spike_rate('Mean rate readout neurons', strains)
