@@ -1,4 +1,5 @@
 import numpy as np
+from pyNN.random import NumpyRNG
 
 def gaussian_convolution(spikes,dt):
     #---- takes a spiketrain and the simulation time constant
@@ -39,8 +40,8 @@ def generate_labeledImages(nr):
 
 # title: title of result
 # strains: spiking trains
-def print_mean_spike_rate(title, strains):
-	print(title)
+def print_mean_spike_rate(strains):
+	print('Mean rate readout neurons (left, right)')
 	print('(' + str(spike_mean_rate(strains[0], param.simulation_time)) + \
 	',' + str(spike_mean_rate(strains[1], param.simulation_time)) + ')')
 
@@ -71,12 +72,15 @@ def compute_weights(X, rout_left, rout_right):
 
 class param:
 	seed = 8658764			# Seed for reproduction of random number
+	rng = NumpyRNG()		# Use seed to reproduce 
 	input_nr = 9			# Number of input neurons
 	readout_nr = 2			# Number of readout neurons
-	reservoir_nr = 5		# Number of reservour neurons
+	reservoir_nr = 10		# Number of reservour neurons
+	res_exc_nr = 20			# Number of excitatory neurons
+	res_inh_nr = 5			# Number of inhibitory neurons
 	simulation_time = 200.0 # Simulation time for each input
 	dt = 1					# Timestep in simulation
-	res_pconn = 0.01		# sparse connection probability for reservoir
+	res_pconn = 0.1		# sparse connection probability for reservoir
 	images_train_nr = 9		# Number of training images to train with, 
 							# Must be a factor of 3
 	images_test_nr = 9  	# Number of test images

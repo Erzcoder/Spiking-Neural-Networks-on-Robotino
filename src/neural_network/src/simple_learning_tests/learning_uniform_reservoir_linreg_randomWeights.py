@@ -20,6 +20,9 @@ from common import param
 
 p.setup(timestep=param.dt)
 
+dist_input = RandomDistribution('uniform', (1, 10), rng=param.rng)
+dist_reservoir = RandomDistribution('uniform', (1, 10), rng=param.rng)
+#print(distribution.next(5))
 ###### Neurons #######
 
 input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson())
@@ -30,17 +33,14 @@ reservoir = p.Population(param.reservoir_nr,p.IF_curr_exp, {}, label="reservoir"
 
 ###### Synapses #######
 
-stat_syn_res = p.StaticSynapse(weight =5.0, delay=1)
-stat_syn_input = p.StaticSynapse(weight =50.0, delay=1)
+stat_syn_res = p.StaticSynapse(weight =dist_reservoir, delay=1)
+stat_syn_input = p.StaticSynapse(weight =dist_input, delay=1)
 stat_syn_rout = p.StaticSynapse(weight =0.0, delay=1)
 
 ######################
 
 ###### Connections #######
-
-rng = NumpyRNG()
-gamma = RandomDistribution('gamma', (2.0, 0.3), rng=rng)
-res_conn = p.FixedProbabilityConnector(param.res_pconn, rng=rng)
+res_conn = p.FixedProbabilityConnector(param.res_pconn, rng=param.rng)
 
 inp_conn = p.AllToAllConnector()
 rout_conn = p.AllToAllConnector()
@@ -54,7 +54,7 @@ connections['inp2r'] = p.Projection(input_neurons, reservoir, inp_conn,
                                       synapse_type=stat_syn_input,receptor_type='excitatory')
 
 #print(gamma.next(param.input_nr*param.reservoir_nr))
-connections['inp2r'].set(weight=50*gamma.next(param.input_nr*param.reservoir_nr))
+#connections['inp2r'].set(weight=50*gamma.next(param.input_nr*param.reservoir_nr))
 
 connections['r2rout'] = p.Projection(reservoir, readout_neurons, rout_conn,
                                       synapse_type=stat_syn_rout,receptor_type='excitatory')
@@ -115,4 +115,4 @@ for labeledImage in param.images_test:
 	readout_neurons_data = readout_neurons.get_data(clear=True)
 	strains = readout_neurons_data.segments[0].spiketrains
 
-	print_mean_spike_rate('Mean rate readout neurons', strains)
+	print_mean_spike_rate(strains)

@@ -38,8 +38,7 @@ stat_syn_rout = p.StaticSynapse(weight =0.0, delay=1)
 
 ###### Connections #######
 
-rng = NumpyRNG(seed=param.seed)
-res_conn = p.FixedProbabilityConnector(param.res_pconn, rng=rng)
+res_conn = p.FixedProbabilityConnector(param.res_pconn, rng=param.rng)
 
 inp_conn = p.AllToAllConnector()
 rout_conn = p.AllToAllConnector()
@@ -109,4 +108,4 @@ for labeledImage in param.images_test:
 	readout_neurons_data = readout_neurons.get_data(clear=True)
 	strains = readout_neurons_data.segments[0].spiketrains
 
-	print_mean_spike_rate('Mean rate readout neurons', strains)
+	print_mean_spike_rate(strains)
