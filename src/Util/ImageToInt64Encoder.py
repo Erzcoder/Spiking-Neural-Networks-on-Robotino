@@ -15,7 +15,7 @@ Each int64 variable is represented like following:
     
 The way it works is simple:
 Consider you have the following binary image:   11111010101010101010101010101010101010101010101010101010101010100 
-In the encoding function you'll split this to 2 int64 elements: 60+5=64 (size of the above image) like following:
+In the encoding function you'll split this to 2 int64 elements: 60+4=64 (size of the above image) like following:
     111110101010101010101010101010101010101010101010101010101010
     101000000000000000000000000000000000000000000000000000000000
     
