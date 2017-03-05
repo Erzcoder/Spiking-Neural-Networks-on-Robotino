@@ -14,7 +14,7 @@ from common import param
 
 # All-to-all connections between input and reservoir
 # Random weights between input and reservoir
-# Uniform weights inside reservoir
+# Random weights inside reservoir
 # Uniform reservoir (all excitatory neurons)
 
 
