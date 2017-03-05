@@ -48,13 +48,9 @@ rout_conn = p.AllToAllConnector()
 connections = {}
 connections['r2r'] = p.Projection(reservoir, reservoir, res_conn,
                                 synapse_type=stat_syn_res, receptor_type='excitatory')
-#connections['r2r'].set(weight=20*gamma.next(param.reservoir_nr*param.reservoir_nr))
 
 connections['inp2r'] = p.Projection(input_neurons, reservoir, inp_conn,
                                       synapse_type=stat_syn_input,receptor_type='excitatory')
-
-#print(gamma.next(param.input_nr*param.reservoir_nr))
-#connections['inp2r'].set(weight=50*gamma.next(param.input_nr*param.reservoir_nr))
 
 connections['r2rout'] = p.Projection(reservoir, readout_neurons, rout_conn,
                                       synapse_type=stat_syn_rout,receptor_type='excitatory')
@@ -105,7 +101,7 @@ connections['r2rout'].set(weight=w)
 
 print("\nTesting accuracy\n")
 
-nr_correct = 0 # TODO: Use this to find ratio of correct output
+nr_correct = 0
 for labeledImage in param.images_test:
 	print('Image')
 	print(labeledImage[0])
@@ -115,4 +111,17 @@ for labeledImage in param.images_test:
 	readout_neurons_data = readout_neurons.get_data(clear=True)
 	strains = readout_neurons_data.segments[0].spiketrains
 
-	print_mean_spike_rate(strains)
+	mean_left, mean_right = print_mean_spike_rate(strains)
+
+	if labeledImage[1][0] > labeledImage[1][1]:
+		if mean_left > mean_right:
+			nr_correct = nr_correct + 1
+	elif  labeledImage[1][1] > labeledImage[1][0]:
+		if mean_right > mean_left:
+			nr_correct = nr_correct + 1
+	else:
+		if abs(mean_left-mean_right) < 0.05:
+			nr_correct = nr_correct + 1
+
+acc = float(nr_correct) / param.images_test_nr
+print("Accuracy: " + str(acc) + "%")
