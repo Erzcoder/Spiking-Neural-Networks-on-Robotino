@@ -34,7 +34,7 @@ def generate_testImage(direction):
 		return [0,0,0,0,0,0,0,0,0]
 
 # Labeled image has the form (image, label)
-# Label is a list [on1, on2], on# being the correct value for 
+# Label is a list [on1, on2], on# being the correct value for
 # the output neurons
 def generate_labeledImages(nr):
 	labeledImages = []
@@ -46,7 +46,7 @@ def generate_labeledImages(nr):
 
 	return labeledImages
 
-	
+
 ###### Parameters #######
 seed=8658764
 
@@ -111,9 +111,9 @@ input_neurons.record(['spikes'])
 reservoir.record(['spikes'])
 readout_neurons.record(['spikes'])
 
-# 30 images x 25 neurons, contains avarage nr of spikes for each neuron 
+# 30 images x 25 neurons, contains avarage nr of spikes for each neuron
 X = np.zeros( (images_nr,reservoir_nr) )
-# yi, expected nr of spikes for output neurons 
+# yi, expected nr of spikes for output neurons
 y1 = []
 y2 = []
 i = 0
@@ -170,7 +170,7 @@ w1 = regr.coef_
 print('Weights w1')
 print(w1)
 
-regr.fit(X, y2)
+regr.fit(X, y2)y
 w2 = regr.coef_
 
 print('Weights w2')
@@ -219,4 +219,3 @@ strains = readout_neurons_data.segments[0].spiketrains
 print('Mean rate output neurons after change of weights')
 print('(' + str(spike_mean_rate(strains[0], simulation_time)) + \
 ',' + str(spike_mean_rate(strains[1], simulation_time)) + ')')
-

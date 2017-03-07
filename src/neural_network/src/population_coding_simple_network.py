@@ -82,8 +82,9 @@ def test_callback(data_input):
     pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=10)
     # construct the output command
     command = Twist()
-    command.linear.x = rate_command*0.02
-    command.angular.z = rate_command/50000.
+    command.linear.x = np.abs((int(mean_rate)%10-4))*10+0.24 #0.24
+    command.angular.z = -(int(mean_rate)%10-4.5)*10
+	#int(mean_rate)%100/100.*np.pi-np.pi/2
     pub.publish(command)
 
     rospy.loginfo('=====send command %r', command.angular.y)

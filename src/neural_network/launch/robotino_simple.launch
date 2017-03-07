@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+<node name="image_preprocessing" pkg="image_preprocessing" type="image_preprocessing_node"/>
+
+	<node name="neural_network" pkg="neural_network" type="robotino_simple_pop_network.py" cwd="node"/>
+
+</launch>

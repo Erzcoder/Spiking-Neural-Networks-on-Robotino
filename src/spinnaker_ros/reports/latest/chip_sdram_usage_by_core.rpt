@@ -1,18 +1,40 @@
         Memory Usage by Core
         ====================
 
-Generated: Wed Jan 25 01:29:32 2017 for target machine '192.168.240.36'
+Generated: Fri Feb  3 10:27:10 2017 for target machine '192.168.240.36'
 
-SDRAM requirements for core (0,0,1) is 1051 KB
-SDRAM requirements for core (0,0,3) is 1051 KB
-SDRAM requirements for core (0,0,4) is 1051 KB
-SDRAM requirements for core (0,0,5) is 1051 KB
-SDRAM requirements for core (0,0,6) is 1051 KB
-SDRAM requirements for core (0,0,7) is 1051 KB
-SDRAM requirements for core (0,0,8) is 1051 KB
-SDRAM requirements for core (0,0,2) is 1051 KB
-SDRAM requirements for core (0,0,9) is 1051 KB
-SDRAM requirements for core (0,0,10) is 1051 KB
-SDRAM requirements for core (0,0,11) is 1024 KB
-**** Chip: (0, 0) has total memory usage of 11537 KB out of a max of 117 MB 
+SDRAM requirements for core (0,0,1) is 1103 KB
+SDRAM requirements for core (1,0,5) is 1103 KB
+SDRAM requirements for core (0,0,3) is 1103 KB
+SDRAM requirements for core (1,0,6) is 1103 KB
+SDRAM requirements for core (1,0,7) is 1103 KB
+SDRAM requirements for core (1,0,8) is 1103 KB
+SDRAM requirements for core (0,0,4) is 1103 KB
+SDRAM requirements for core (0,0,5) is 1103 KB
+SDRAM requirements for core (0,0,6) is 1103 KB
+SDRAM requirements for core (0,0,7) is 1103 KB
+SDRAM requirements for core (0,0,8) is 1103 KB
+SDRAM requirements for core (0,0,9) is 1103 KB
+SDRAM requirements for core (0,0,10) is 1103 KB
+SDRAM requirements for core (0,0,11) is 1103 KB
+SDRAM requirements for core (0,0,2) is 1103 KB
+SDRAM requirements for core (0,0,12) is 1103 KB
+SDRAM requirements for core (0,0,13) is 1103 KB
+SDRAM requirements for core (0,0,14) is 1103 KB
+SDRAM requirements for core (0,0,15) is 1103 KB
+SDRAM requirements for core (0,0,16) is 1103 KB
+SDRAM requirements for core (1,0,1) is 1103 KB
+SDRAM requirements for core (1,0,2) is 1103 KB
+SDRAM requirements for core (1,0,3) is 1103 KB
+SDRAM requirements for core (1,0,4) is 1103 KB
+SDRAM requirements for core (1,0,9) is 1103 KB
+SDRAM requirements for core (1,0,11) is 1103 KB
+SDRAM requirements for core (1,0,12) is 1103 KB
+SDRAM requirements for core (1,0,13) is 1103 KB
+SDRAM requirements for core (1,0,14) is 1103 KB
+SDRAM requirements for core (1,0,10) is 1103 KB
+SDRAM requirements for core (1,0,15) is 1024 KB
+**** Chip: (0, 0) has total memory usage of 17661 KB out of a max of 117 MB 
+
+**** Chip: (1, 0) has total memory usage of 16478 KB out of a max of 117 MB 
 

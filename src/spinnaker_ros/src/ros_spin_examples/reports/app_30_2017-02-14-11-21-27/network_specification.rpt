@@ -1,0 +1,30 @@
+        Network Specification
+ =====================
+
+Generated: Tue Feb 14 11:21:27 2017 for target machine '192.168.240.36'
+
+*** Vertices:
+Vertex pop, size: 1
+Model: IFCurrExp
+constraint: PartitionerMaximumSizeConstraint(size=255)
+
+Vertex injector0, size: 1
+Model: SpikeInjector
+constraint: PartitionerMaximumSizeConstraint(size=9223372036854775807)
+
+Vertex LiveSpikeReceiver, size: 1
+Model: LivePacketGather
+constraint: PlacerRadialPlacementFromChipConstraint(x=0, y=0)
+constraint: PartitionerMaximumSizeConstraint(size=1)
+
+Vertex Population 0, size: 1
+Model: SpikeSourcePoisson
+constraint: PartitionerMaximumSizeConstraint(size=500)
+
+*** Edges:
+Edge Projection 0 from vertex: 'Population 0' (1 atoms) to vertex: 'pop' (1 atoms)
+  Model: No Model
+
+Edge recorder_edge from vertex: 'pop' (1 atoms) to vertex: 'LiveSpikeReceiver' (1 atoms)
+  Model: No Model
+

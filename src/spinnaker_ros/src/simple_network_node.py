@@ -1,32 +1,49 @@
 #!/usr/bin/env python
+"""
+@author Nicolas Berberich, Elie Aljalbout
+@date   14.01.2016
 
+This is a simple network to demonstate the closed loop between
+a network running on the SpiNNaker board and a robot simulated in gazebo.
+"""
 
-import pyNN.nest as p
 from pyNN.random import NumpyRNG, RandomDistribution
 from pyNN.utility import Timer
 import matplotlib.pyplot as plt
 import pylab
 import numpy as np
 from scipy import signal
-
-
 import rospy
-from std_msgs.msg import String
-from sensor_msgs.msg import Image
-from geometry_msgs.msg import Twist
+from std_msgs.msg import Int64
+
+
+
+import spynnaker.pyNN as pynn
+from ros_spinnaker_interface import ROS_Spinnaker_Interface
+from ros_spinnaker_interface import SpikeSourcePoisson
+from ros_spinnaker_interface import SpikeSinkSmoothing
+# import transfer_functions as tf
 
 def network():
-    rospy.init_node('simple_network_node')
-    rate = rospy.Rate(10) # 10hz
-    rospy.Subscriber("camera/image_processed", Image, test_callback)
-    rospy.Subscriber("camera/rgb/image_raw", Image, test_callback)
-    #rospy.Subscriber("/chatter", String, callback)
-    rospy.Subscriber("/test_image", Image, test_callback)
+    # simulator setup
+    dt = 0.1                     # simulation timestep in ms
+    simulation_time = 50000      # in ms
+    pynn.setup(timestep=dt, min_delay=dt, max_delay=2.0*dt) # ensure real-time execution
 
-    rospy.loginfo('starting---------------')
-    rospy.spin()
-    #while True:
-    #    rospy.loginfo_throttle(10, "This message will print every 10 seconds")
+    n_input = 3
+
+    ros_interface = ROS_Spinnaker_Interface(
+        n_neurons_source=n_input,                 # number of neurons of the injector population
+        Spike_Source_Class=SpikeSourcePoisson,   # the transfer function ROS Input -> Spikes you want to use.
+        Spike_Sink_Class=SpikeSinkSmoothing,     # the transfer function Spikes -> ROS Output you want to use.
+                                                    # You can choose from the transfer_functions module
+                                                    # or write one yourself.
+        output_population=pop,                      # the pynn population you wish to receive the
+                                                    # live spikes from.
+        ros_topic_send='to_spinnaker',              # the ROS topic used for the incoming ROS values.
+        ros_topic_recv='from_spinnaker',            # the ROS topic used for the outgoing ROS values.
+        clk_rate=1000,                              # mainloop clock (update) rate in Hz.
+        ros_output_rate=10) # number of ROS messages send out per second.
 
 def gaussian_convolution(spikes,dt):
     #----------- works only after the simulation has run; not online!!!!!!!!

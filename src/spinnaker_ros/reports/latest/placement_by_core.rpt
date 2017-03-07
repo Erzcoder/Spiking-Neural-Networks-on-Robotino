@@ -1,61 +1,163 @@
         Placement Information by Core
         =============================
 
-Generated: Wed Jan 25 01:29:32 2017 for target machine '192.168.240.36'
+Generated: Fri Feb  3 10:27:10 2017 for target machine '192.168.240.36'
 
 **** Chip: (0, 0)
 Application cores: 18
-  Processor 1: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 1: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 0:49 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 2: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 2: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 50:99 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 3: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 3: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 100:149 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 4: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 4: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 150:199 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 5: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 5: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 200:249 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 6: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 6: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 250:299 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 7: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 7: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 300:349 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 8: Vertex: 'Excitatory_Cells', pop size: 400
+  Processor 8: Vertex: 'Excitatory_Cells', pop size: 1200
               Slice on this core: 350:399 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 9: Vertex: 'Inhibitory_Cells', pop size: 100
+  Processor 9: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 400:449 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 10: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 450:499 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 11: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 500:549 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 12: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 550:599 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 13: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 600:649 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 14: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 650:699 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 15: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 700:749 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 16: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 750:799 (50 atoms)
+              Model: IFCondExp
+
+
+**** Chip: (1, 0)
+Application cores: 18
+  Processor 1: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 800:849 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 2: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 850:899 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 3: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 900:949 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 4: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 950:999 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 5: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 1000:1049 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 6: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 1050:1099 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 7: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 1100:1149 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 8: Vertex: 'Excitatory_Cells', pop size: 1200
+              Slice on this core: 1150:1199 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 9: Vertex: 'Inhibitory_Cells', pop size: 300
               Slice on this core: 0:49 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 10: Vertex: 'Inhibitory_Cells', pop size: 100
+  Processor 10: Vertex: 'Inhibitory_Cells', pop size: 300
               Slice on this core: 50:99 (50 atoms)
               Model: IFCondExp
 
 
-  Processor 11: Vertex: 'expoisson', pop size: 20
+  Processor 11: Vertex: 'Inhibitory_Cells', pop size: 300
+              Slice on this core: 100:149 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 12: Vertex: 'Inhibitory_Cells', pop size: 300
+              Slice on this core: 150:199 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 13: Vertex: 'Inhibitory_Cells', pop size: 300
+              Slice on this core: 200:249 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 14: Vertex: 'Inhibitory_Cells', pop size: 300
+              Slice on this core: 250:299 (50 atoms)
+              Model: IFCondExp
+
+
+  Processor 15: Vertex: 'expoisson', pop size: 20
               Slice on this core: 0:19 (20 atoms)
               Model: SpikeSourcePoisson
 
