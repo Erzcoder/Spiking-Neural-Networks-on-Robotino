@@ -1,5 +1,7 @@
 import numpy as np
 from pyNN.random import NumpyRNG
+from sklearn.linear_model import LinearRegression
+import math
 
 def gaussian_convolution(spikes,dt):
     #---- takes a spiketrain and the simulation time constant
@@ -16,7 +18,7 @@ def spike_mean_rate(spikes, sim_time):
 	return len(spikes) / sim_time
 
 def generate_testImage(direction):
-	potential = 1
+	potential = 100
 	if direction=="left":
 		return [potential,0,0,potential,0,0,potential,0,0]
 	elif direction=='middle':
@@ -48,6 +50,24 @@ def print_mean_spike_rate(strains):
 
 	return (mean_left, mean_right)
 
+def compute_linear_weights(X, rout_left, rout_right):
+	print('size of X',np.size(X))
+	regr1 = LinearRegression()
+	regr1.fit(X,rout_left)
+	#print('Coefficients: \n', regr1.coef_)
+	w1 = regr1.coef_
+	
+	regr2 = LinearRegression()
+	regr2.fit(X,rout_right)
+	#print('Coefficients: \n', regr2.coef_)
+	w2 = regr2.coef_
+		
+	w = []
+	for i in range(param.reservoir_nr):
+		w.append(w1[i])
+		w.append(w2[i])
+
+	return w
 
 def compute_weights(X, rout_left, rout_right):
 	######### Fit weights to each output neuron with linear regression ###########
@@ -111,8 +131,8 @@ class param:
 	rng = NumpyRNG()		# Use seed to reproduce 
 	input_nr = 9			# Number of input neurons
 	readout_nr = 2			# Number of readout neurons
-	reservoir_nr = 5		# Number of reservour neurons
-	simulation_time = 200.0 # Simulation time for each input
+	reservoir_nr = 50		# Number of reservour neurons
+	simulation_time = 19.0 # Simulation time for each input
 	dt = 1					# Timestep in simulation
 	res_pconn = 0.1			# sparse connection probability for reservoir
 	images_train_nr = 9		# Number of training images to train with, 
@@ -122,10 +142,10 @@ class param:
 	images_test = generate_labeledImages(images_test_nr)
 
 	# If network uses excitatory and inhibatory neurons
-	res_exc_nr = 20			# Number of excitatory neurons
-	res_inh_nr = 5			# Number of inhibitory neurons
+	res_exc_nr = int(math.ceil(reservoir_nr*0.8))		# Number of excitatory neurons
+	res_inh_nr = int(math.floor(reservoir_nr*0.2))		# Number of inhibitory neurons
 
-
+	print('exc:', res_exc_nr)
 
 
 
