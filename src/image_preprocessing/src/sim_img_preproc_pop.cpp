@@ -18,6 +18,24 @@
 //============================================
 //============================================
 
+//ROI params
+//============================================
+//============================================
+
+int WIDTH_START_NOM     =1;
+int WIDTH_START_DENOM   =6;
+
+int HEIGHT_START_NOM    =1;
+int HEIGHT_START_DENOM  =2;
+
+int WIDTH_NOM           =2;
+int WIDTH_DENOM         =3;
+
+int HEIGHT_NOM          =1;
+int HEIGHT_DENOM        =2;
+//============================================
+//============================================
+
 //Store all constants for image encodings in the enc namespace to be used later.
 namespace enc = sensor_msgs::image_encodings;
 
@@ -56,25 +74,28 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 	//cv::Mat rimage=cv_ptr->image;
 	// transform the image to gray scale
 	cvtColor(cv_ptr->image, cv_ptr->image, CV_RGB2GRAY);
+
 	if(PREPROCESS){
-	cv::Size s = cv_ptr->image.size();
-	int height = s.height;
-	int width  = s.width;
+    	cv::Size s = cv_ptr->image.size();
+    	int height = s.height;
+    	int width  = s.width;
 
-	cv::Rect myROI(width/6, height/2, (width*2)/3, height/2);
+    	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
 
-	// Crop the full image to that image contained by the rectangle myROI
-	cv_ptr->image=cv_ptr->image(myROI);
-	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
-	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
-	{
-	    pyrDown( cv_ptr->image, cv_ptr->image, cv::Size( cv_ptr->image.cols/2, cv_ptr->image.rows/2 ) );
-	}
+    	// Crop the full image to that image contained by the rectangle myROI
+    	cv_ptr->image=cv_ptr->image(myROI);
+    	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
+    	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
+    	{
+    	    pyrDown( cv_ptr->image, cv_ptr->image, cv::Size( cv_ptr->image.cols/2, cv_ptr->image.rows/2 ) );
+    	}
 	}
 
 	// threshold the image (could alternatively use adaptivThreshold() )
 	threshold(cv_ptr->image,cv_ptr->image,threshold_value,max_binary_value,threshold_type);
+
 	cv::imshow(WINDOWRAW, cv_ptr->image);
+    cv::waitKey(10);
 
 	//Calculate column summation
 	//int imgStepSize = rimage->widthStep;
@@ -102,6 +123,21 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
         pub.publish(cv_ptr->toImageMsg());
 }
 
+void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
+{
+    WIDTH_START_NOM     =msg->data[0];
+    WIDTH_START_DENOM   =msg->data[1];
+
+    HEIGHT_START_NOM    =msg->data[2];
+    HEIGHT_START_DENOM  =msg->data[3];
+
+    WIDTH_NOM           =msg->data[4];
+    WIDTH_DENOM         =msg->data[5];
+
+    HEIGHT_NOM          =msg->data[6];
+    HEIGHT_DENOM        =msg->data[7];
+}
+
 
 int main(int argc, char **argv)
 {
@@ -119,8 +155,11 @@ int main(int argc, char **argv)
 
     cv::namedWindow(WINDOWRAW, CV_WINDOW_AUTOSIZE);
 
+    ros::NodeHandle nparams;
+    ros::Subscriber paramsSub = nparams.subscribe("ROI_params", 1000, paramsCallback);
 
-    image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1,   imageCallback);
+
+    image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1,   imageCallback);
 
 
     cv::destroyWindow(WINDOWRAW);
