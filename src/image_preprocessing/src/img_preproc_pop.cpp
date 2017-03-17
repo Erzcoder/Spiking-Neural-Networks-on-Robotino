@@ -26,6 +26,24 @@
 //============================================
 //============================================
 
+//ROI params
+//============================================
+//============================================
+
+int WIDTH_START_NOM 	=1;
+int WIDTH_START_DENOM 	=6;
+
+int HEIGHT_START_NOM 	=1;
+int HEIGHT_START_DENOM 	=2;
+
+int WIDTH_NOM 			=2;
+int WIDTH_DENOM 		=3;
+
+int HEIGHT_NOM 			=1;
+int HEIGHT_DENOM 		=2;
+//============================================
+//============================================
+
 //Store all constants for image encodings in the enc namespace to be used later.
 namespace enc = sensor_msgs::image_encodings;
 
@@ -75,7 +93,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 	int height = s.height;
 	int width  = s.width;
 
-	cv::Rect myROI(width/6, height/2, (width*2)/3, height/2);
+	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
 
 	// Crop the full image to that image contained by the rectangle myROI
 	cv_ptr->image=cv_ptr->image(myROI);
@@ -117,6 +135,21 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
         pub.publish(cv_ptr->toImageMsg());
 }
 
+void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
+{
+    WIDTH_START_NOM 	=msg->data[0];
+	WIDTH_START_DENOM 	=msg->data[1];
+
+	HEIGHT_START_NOM 	=msg->data[2];
+	HEIGHT_START_DENOM 	=msg->data[3];
+
+	WIDTH_NOM 			=msg->data[4];
+	WIDTH_DENOM 		=msg->data[5];
+
+	HEIGHT_NOM 			=msg->data[6];
+	HEIGHT_DENOM 		=msg->data[7];
+}
+
 
 int main(int argc, char **argv)
 {
@@ -133,6 +166,9 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(nh);
 
     cv::namedWindow(WINDOWRAW, CV_WINDOW_AUTOSIZE);
+
+    ros::NodeHandle nparams;
+    ros::Subscriber paramsSub = nparams.subscribe("ROI_params", 1000, paramsCallback);
 
 
     image_transport::Subscriber sub = it.subscribe("/cv_camera/image_raw", 1,   imageCallback);
