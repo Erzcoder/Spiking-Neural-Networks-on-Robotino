@@ -159,7 +159,7 @@ int main(int argc, char **argv)
     ros::Subscriber paramsSub = nparams.subscribe("ROI_params", 1000, paramsCallback);
 
 
-    image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1,   imageCallback);
+    image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1,   imageCallback);
 
 
     cv::destroyWindow(WINDOWRAW);
