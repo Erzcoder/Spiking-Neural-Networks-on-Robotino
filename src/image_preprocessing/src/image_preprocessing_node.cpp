@@ -75,41 +75,41 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 
 //////////////////// Do the image processing ///////////////////////////
 	
-	int threshold_value=50;
-	int max_binary_value=255;
-	int threshold_type=0;
+     int threshold_value=50;
+     int max_binary_value=255;
+     int threshold_type=0;
 
-	cv::Size s = cv_ptr->image.size();
-	int height = s.height;
-	int width  = s.width;
+     cv::Size s = cv_ptr->image.size();
+     int height = s.height;
+     int width  = s.width;
 	
-	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
+     cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
 
-	// Crop the full image to that image contained by the rectangle myROI
-	cv::Mat processedImage=cv_ptr->image(myROI);
-	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
-	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
-	{
-	    pyrDown( processedImage, processedImage, cv::Size( processedImage.cols/2, processedImage.rows/2 ) );
-	}
-	// smoothe the image to reduce noise
-	cv::Mat testImage=processedImage;
-	cvtColor(testImage, testImage, CV_RGB2GRAY);
+     // Crop the full image to that image contained by the rectangle myROI
+     cv::Mat processedImage=cv_ptr->image(myROI);
+     // subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
+     for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
+     {
+         pyrDown( processedImage, processedImage, cv::Size( processedImage.cols/2, processedImage.rows/2 ) );
+     }
+     // smoothe the image to reduce noise
+     cv::Mat testImage=processedImage;
+     cvtColor(testImage, testImage, CV_RGB2GRAY);
 
-	//GaussianBlur(processedImage, processedImage,cv::Size(7,7),0,0);
-	// transform the image to gray scale
-	cvtColor(processedImage, processedImage, CV_RGB2GRAY);
+     //GaussianBlur(processedImage, processedImage,cv::Size(7,7),0,0);
+     // transform the image to gray scale
+     cvtColor(processedImage, processedImage, CV_RGB2GRAY);
 
-	//image histogram stretching manual setup of ALPHA AND BETA parameters
-	//processedImage.convertTo(processedImage, -1, ALPHA, BETA);
-	//image histogram equalisation
-	equalizeHist(processedImage,processedImage);
-	// threshold the image (could alternatively use adaptivThreshold() ) 
-	//threshold(processedImage,processedImage,threshold_value,max_binary_value,threshold_type);
-	/*int erosion_size=3;
-	int erosion_type=cv::MORPH_RECT;
-	cv::Mat element=getStructuringElement(erosion_type,cv::Size(2*erosion_size+1,2*erosion_size+1),cv::Point(erosion_size,erosion_size));
-	erode(cv_ptr->image,cv_ptr->image,element);*/
+     //image histogram stretching manual setup of ALPHA AND BETA parameters
+     //processedImage.convertTo(processedImage, -1, ALPHA, BETA);
+     //image histogram equalisation
+     equalizeHist(processedImage,processedImage);
+     // threshold the image (could alternatively use adaptivThreshold() ) 
+     //threshold(processedImage,processedImage,threshold_value,max_binary_value,threshold_type);
+     /*int erosion_size=3;
+     int erosion_type=cv::MORPH_RECT;
+     cv::Mat element=getStructuringElement(erosion_type,cv::Size(2*erosion_size+1,2*erosion_size+1),cv::Point(erosion_size,erosion_size));
+     erode(cv_ptr->image,cv_ptr->image,element);*/
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
  
@@ -129,7 +129,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
     * in the constructor in main().
     */
     //Convert the CvImage to a ROS image message and publish it on the "camera/image_processed" topic.
-        pub.publish(cv_ptr->toImageMsg());
+    cv::imshow(WINDOWRAW, cv_ptr->image);
+    pub.publish(cv_ptr->toImageMsg());
 }
 
 void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
