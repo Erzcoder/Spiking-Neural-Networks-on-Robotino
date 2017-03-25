@@ -1,4 +1,73 @@
+
+For controlling the physical Robotino: roslaunch neural_network robotino_simple.launch
+
+For controlling the simulated Turtlebot: roslaunch neural_network sim_image_preprocessing_pop.launch
+
+---------------------------------------------------------------------
+Explanation of all launch files:
+
+image_network.launch
+	nodes:
+		cv_camera_node
+		image_preprocessing
+		simple_network_node
+
+image_network_pop.launch
+	nodes: 
+		cv_camera_node
+		image_preprocessing_node
+		simple_network_node
+
+image_preprocessing.launch
+	nodes:
+		cv_camera_node
+		image_preprocessing_node
+
+image_preprocessing_pop.launch
+	nodes:
+		cv_camera_node
+		img_preproc_pop
+
+population_network.launch
+	launch-files: 
+		turtlebot_world.launch
+	nodes:
+		image_preprocessing_node
+		simple_network_node
+
+robotino_simple.launch
+	nodes:
+		image_preprocessing_node
+		robotino_simple_pop_network
+
+sim_image_network_pop.launch
+	launch-files:
+		turtlebot_lane_world.launch
+	nodes:	
+		sim_img_preproc_pop
+		population_coding_simple_network
+
+sim_image_preprocessing_pop.launch
+	nodes:
+		cv_camera_node
+		sim_img_preproc_pop
+		
+talker_network.launch
+	For testing purposes only.
+	Talker node sends 3x3 images to the simple_network_node over topic 'test_image' 
+	launch-files:
+		turtlebot_world.launch
+	nodes:
+		talker
+		simple_network_node
+		
+
+------------------------------------------------------------
+
+
+
 tested & working as intended:
+
 
 sim_image_network_pop.launch
 

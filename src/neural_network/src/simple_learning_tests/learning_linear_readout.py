@@ -1,3 +1,11 @@
+"""
+
+This script trains our network on simple 3x3 images with corresponding control commands (left-right) as labels. 
+Here, the readout neurons are non-spiking linear neurons.
+
+"""
+
+
 import pyNN.nest as p
 from pyNN.random import NumpyRNG, RandomDistribution
 
@@ -23,6 +31,10 @@ from common import param
 # inhibitory neurons give negative potential
 
 p.setup(timestep=param.dt)
+dist_input = RandomDistribution('uniform', (1, 10), rng=param.rng)
+dist_exc = RandomDistribution('uniform', (1, 10), rng=param.rng)
+dist_inh = RandomDistribution('uniform', (10, 40), rng=param.rng)
+
 
 ######################
 
@@ -39,9 +51,12 @@ reservoir_inh = p.Population(param.res_inh_nr,p.IF_curr_exp, {}, label="reservoi
 
 ###### Synapses #######
 
-stat_syn_exc = p.StaticSynapse(weight =5.0, delay=1)
-stat_syn_inh = p.StaticSynapse(weight =20.0, delay=1)
-stat_syn_input = p.StaticSynapse(weight =50.0, delay=1)
+
+stat_syn_input = p.StaticSynapse(weight =dist_input, delay=1)
+
+stat_syn_exc = p.StaticSynapse(weight =dist_exc, delay=1)
+stat_syn_inh = p.StaticSynapse(weight =dist_inh, delay=1)
+#stat_syn_input = p.StaticSynapse(weight =50.0, delay=1)
 
 ######################
 
@@ -73,7 +88,7 @@ connections['inp2i'] = p.Projection(input_neurons, reservoir_inh, inp_conn,
 ###### Linear Readout Neurons
 
 readout_rates = np.zeros(param.reservoir_nr)
-#readout_weights = np.zeros(param.reservoir_nr)
+one_readout = 0
 
 
 ######################
@@ -136,13 +151,28 @@ for labeledImage in param.images_test:
 	input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]})
 	p.run(param.simulation_time)
 
-	#readout_neurons_data = readout_neurons.get_data(clear=True)
-	#strains = readout_neurons_data.segments[0].spiketrains
+	
 
-	#mean_left, mean_right = print_mean_spike_rate(strains)
-	mean_left = np.sum(np.dot(X,readout_weights[:][0]))
+	# for each image compute the reservoir liquid state X
+
+	reservoir_exc_data = reservoir_exc.get_data(clear=True)
+	reservoir_inh_data = reservoir_inh.get_data(clear=True)
+
+	mean_rates = []
+	for spiketrain in reservoir_exc_data.segments[0].spiketrains:
+		mean_rate = spike_mean_rate(spiketrain, param.simulation_time)
+		mean_rates.append(mean_rate)
+
+	for spiketrain in reservoir_inh_data.segments[0].spiketrains:
+		mean_rate = spike_mean_rate(spiketrain, param.simulation_time)
+		mean_rates.append(mean_rate)
+
+	liquid_state = mean_rates
+	# print('liquid_state:' ,liquid_state)
+	
+	mean_left = np.sum(np.dot(liquid_state,readout_weights[:][0]))
 	print('mean_left:', mean_left)
-	mean_right = np.sum(np.dot(X,readout_weights[:][1]))
+	mean_right = np.sum(np.dot(liquid_state,readout_weights[:][1]))
 	print('mean_right:', mean_right)
 	if mean_left > mean_right:
 		print('predicted left image')
