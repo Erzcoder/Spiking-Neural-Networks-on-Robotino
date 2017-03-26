@@ -1,3 +1,5 @@
+Created a new ROS message type and added the coresponding lines in CMakeLists.txt
+
 For ROS Hydro and later, you need to uncomment these lines: 
 # generate_messages(
 #   DEPENDENCIES
