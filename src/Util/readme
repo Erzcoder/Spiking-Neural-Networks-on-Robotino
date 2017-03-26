@@ -1,0 +1,2 @@
+Encode : Transfer an image into an few int64 variables.
+Decode : Group int64 variables back to image structure based on id.
