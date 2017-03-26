@@ -1,0 +1,1 @@
+The models must be coppied into the Models folder of Gazebo at:  ~/.gazebo/models
