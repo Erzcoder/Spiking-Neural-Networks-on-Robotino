@@ -71,7 +71,7 @@ rout_left = [] #left images labels
 rout_right = [] #right images labels
 i = 0
 for labeledImage in param.images_train:
-	input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]*5})
+	input_neurons = p.Population(param.input_nr, p.SpikeSourcePoisson, {'rate':labeledImage[0]})
 
 	p.run(param.simulation_time)
 
@@ -123,6 +123,8 @@ for labeledImage in param.images_test:
 		if abs(mean_left-mean_right) < 0.05:
 			nr_correct = nr_correct + 1
 
-acc = float(nr_correct) / param.images_test_nr
+acc = 100*float(nr_correct) / param.images_test_nr
 print("Accuracy: " + str(acc) + "%")
+
+
 
