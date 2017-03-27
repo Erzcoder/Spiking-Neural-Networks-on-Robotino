@@ -1,13 +1,14 @@
-//Includes all the headers necessary to use the most common public pieces of the ROS system.
 #include <ros/ros.h>
-//Use image_transport for publishing and subscribing to images in ROS
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-//Include some useful constants for image encoding. Refer to: http://www.ros.org/doc/api/sensor_msgs/html/namespacesensor__msgs_1_1image__encodings.html for more info.
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "std_msgs/Int32MultiArray.h"
+
+//=========================================================================================================
+//This node is the main preprocessing node which results can later be used as rate coded input to the S.N.N
+//=========================================================================================================
 
 //Parameters
 //============================================
@@ -66,7 +67,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
     catch (cv_bridge::Exception& e)
     {
         //if there is an error during conversion, display it
-        ROS_ERROR("tutorialROSOpenCV::main.cpp::cv_bridge exception: %s", e.what());
+        ROS_ERROR("Image preprocessing node::main.cpp::cv_bridge exception: %s", e.what());
         return;
     }
     
@@ -75,50 +76,46 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 
 //////////////////// Do the image processing ///////////////////////////
 	
-     int threshold_value=50;
-     int max_binary_value=255;
-     int threshold_type=0;
+	int threshold_value=50;
+	int max_binary_value=255;
+	int threshold_type=0;
 
-     cv::Size s = cv_ptr->image.size();
-     int height = s.height;
-     int width  = s.width;
+	cv::Size s = cv_ptr->image.size();
+	int height = s.height;
+	int width  = s.width;
 	
-     cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
 
-     // Crop the full image to that image contained by the rectangle myROI
-     cv::Mat processedImage=cv_ptr->image(myROI);
-     // subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
-     for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
-     {
-         pyrDown( processedImage, processedImage, cv::Size( processedImage.cols/2, processedImage.rows/2 ) );
-     }
-     // smoothe the image to reduce noise
-     cv::Mat testImage=processedImage;
-     cvtColor(testImage, testImage, CV_RGB2GRAY);
+    cv::imshow(WINDOWRAW, cv_ptr->image);
 
-     //GaussianBlur(processedImage, processedImage,cv::Size(7,7),0,0);
-     // transform the image to gray scale
-     cvtColor(processedImage, processedImage, CV_RGB2GRAY);
+	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
 
-     //image histogram stretching manual setup of ALPHA AND BETA parameters
-     //processedImage.convertTo(processedImage, -1, ALPHA, BETA);
-     //image histogram equalisation
-     equalizeHist(processedImage,processedImage);
-     // threshold the image (could alternatively use adaptivThreshold() ) 
-     //threshold(processedImage,processedImage,threshold_value,max_binary_value,threshold_type);
-     /*int erosion_size=3;
-     int erosion_type=cv::MORPH_RECT;
-     cv::Mat element=getStructuringElement(erosion_type,cv::Size(2*erosion_size+1,2*erosion_size+1),cv::Point(erosion_size,erosion_size));
-     erode(cv_ptr->image,cv_ptr->image,element);*/
+	// Crop the full image to that image contained by the rectangle myROI
+	cv_ptr->image=cv_ptr->image(myROI);
+	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
+	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
+	{
+	    pyrDown( cv_ptr->image, cv_ptr->image, cv::Size( cv_ptr->image.cols/2, cv_ptr->image.rows/2 ) );
+	}
+	// smoothe the image to reduce noise
+	cvtColor(cv_ptr->image, cv_ptr->image, CV_RGB2GRAY);
+
+	//GaussianBlur(processedImage, processedImage,cv::Size(7,7),0,0);
+	// transform the image to gray scale
+
+	//image histogram equalisation
+	equalizeHist(cv_ptr->image,cv_ptr->image);
+	// threshold the image (could alternatively use adaptivThreshold() ) 
+	threshold(cv_ptr->image,cv_ptr->image,threshold_value,max_binary_value,threshold_type);
+
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
  
     //Display the image using OpenCV
-    cv::imshow(WINDOW, processedImage);
-    cv::imshow(WINDOWRAW, cv_ptr->image);
+    cv::imshow(WINDOW, cv_ptr->image);
+    
 
     if(DEVELOP_MODE)
-   	cv::imshow(WINDOWTEST, testImage);
+   	cv::imshow(WINDOWTEST, cv_ptr->image);
      
     //Add some delay in miliseconds. The function only works if there is at least one HighGUI window created and the window is active. If there are several HighGUI windows, any of them can be active.
     cv::waitKey(3);
@@ -129,7 +126,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
     * in the constructor in main().
     */
     //Convert the CvImage to a ROS image message and publish it on the "camera/image_processed" topic.
-    cv::imshow(WINDOWRAW, cv_ptr->image);
+
     pub.publish(cv_ptr->toImageMsg());
 }
 
@@ -148,23 +145,17 @@ void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 	HEIGHT_DENOM 		=msg->data[7];
 }
  
-/**
-* This tutorial demonstrates simple image conversion between ROS image message and OpenCV formats and image processing
-*/
 int main(int argc, char **argv)
 {
     ROS_DEBUG("in main");
    
     ros::init(argc, argv, "image_processor");
-    /**
-    * NodeHandle is the main access point to communications with the ROS system.
-    * The first NodeHandle constructed will fully initialize this node, and the last
-    * NodeHandle destructed will close down the node.
-    */
+
     ros::NodeHandle nh;
+
     //Create an ImageTransport instance, initializing it with our NodeHandle.
     image_transport::ImageTransport it(nh);
-    //OpenCV HighGUI call to create a display window on start-up.
+
     cv::namedWindow(WINDOW, CV_WINDOW_AUTOSIZE);
     cv::namedWindow(WINDOWRAW, CV_WINDOW_AUTOSIZE);
     cv::namedWindow(WINDOWTEST, CV_WINDOW_AUTOSIZE);
@@ -182,14 +173,9 @@ int main(int argc, char **argv)
     
     
     pub = it.advertise("camera/image_processed", 1);
-    /**
-    * In this application all user callbacks will be called from within the ros::spin() call.
-    * ros::spin() will not return until the node has been shutdown, either through a call
-    * to ros::shutdown() or a Ctrl-C.
-    */
+
     ros::spin();
     //ROS_INFO is the replacement for printf/cout.
     ROS_INFO("image preprocessing node::main.cpp::No error.");
  
 }
-

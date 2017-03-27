@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 ////
 ////    Takes image msgs from simulation (gazebo) and preprocesses it.
-////    The output can be used as population coding
+////    In addition population coding is performed based on weighted column wise summation
 ////
 ////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +14,7 @@
 //Include some useful constants for image encoding. Refer to: http://www.ros.org/doc/api/sensor_msgs/html/namespacesensor__msgs_1_1image__encodings.html for more info.
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <math.h> 
 #include <opencv2/highgui/highgui.hpp>
 #include "std_msgs/Int32MultiArray.h"
 
@@ -21,7 +22,8 @@
 //============================================
 //============================================
 #define SAMPLE_COEF_EXP		3
-#define PREPROCESS		1
+#define PREPROCESS		    1
+#define WEIGHTED_SUM        1   
 
 //============================================
 //============================================
@@ -75,58 +77,64 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 
 //////////////////// Do the image processing ///////////////////////////
 
-	int threshold_value=50;
-	int max_binary_value=255;
-	int threshold_type=0;
+    	int threshold_value=50;
+    	int max_binary_value=255;
+    	int threshold_type=0;
 
 
-	//cv::Mat rimage=cv_ptr->image;
-	// transform the image to gray scale
+    	//cv::Mat rimage=cv_ptr->image;
+    	// transform the image to gray scale
 
-	cvtColor(cv_ptr->image, cv_ptr->image, CV_RGB2GRAY);
-  cv::Mat test=cv_ptr->image;
-  cv::imshow(WINDOWRAW, test); // TODO only showing black window
-
-
-	if(PREPROCESS){
-	cv::Size s = cv_ptr->image.size();
-	int height = s.height;
-	int width  = s.width;
-
-	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
-
-	// Crop the full image to that image contained by the rectangle myROI
-	cv_ptr->image=cv_ptr->image(myROI);
-	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
-	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
-	{
-	    pyrDown( cv_ptr->image, cv_ptr->image, cv::Size( cv_ptr->image.cols/2, cv_ptr->image.rows/2 ) );
-	}
-	}
-
-	// threshold the image (could alternatively use adaptivThreshold() )
-	threshold(cv_ptr->image,cv_ptr->image,threshold_value,max_binary_value,threshold_type);
+    	cvtColor(cv_ptr->image, cv_ptr->image, CV_RGB2GRAY);
+        cv::Mat test=cv_ptr->image;
+        cv::imshow(WINDOWRAW, test); // TODO only showing black window
 
 
-	//Calculate column summation
-	//int imgStepSize = rimage->widthStep;
-	//uchar* data = (uchar*)rimage->imageData;
-	/*td_msgs::Int32MultiArray csumVector;
-	uint tmpSumVector[rimage.cols];
-	memset(tmpSumVector, 0, sizeof(uchar) * rimage.cols);
-	for (int col = 0; col < rimage.cols; col++) {
-  		for (int row = 0; row < rimage.rows; row++) {
-			ROS_INFO("i=%d, j=%d value=%d",row,col,rimage.at<int>(row,col));
-    			tmpSumVector[col] += rimage.at<int>(row,col);
-  		}
-		csumVector.data.push_back(tmpSumVector[col]);
-	}*/
+    	if(PREPROCESS){
+        	cv::Size s = cv_ptr->image.size();
+        	int height = s.height;
+        	int width  = s.width;
+
+        	cv::Rect myROI((width*WIDTH_START_NOM)/WIDTH_START_DENOM, (height*HEIGHT_START_NOM)/HEIGHT_START_DENOM, (width*WIDTH_NOM)/WIDTH_DENOM, (height*HEIGHT_NOM)/HEIGHT_DENOM);
+
+        	// Crop the full image to that image contained by the rectangle myROI
+        	cv_ptr->image=cv_ptr->image(myROI);
+        	// subsampling the image by a coefiecient of pow(2,SAMPLE_COEF_EXP)
+        	for(int sample=0; sample<SAMPLE_COEF_EXP; sample++)
+        	{
+        	    pyrDown( cv_ptr->image, cv_ptr->image, cv::Size( cv_ptr->image.cols/2, cv_ptr->image.rows/2 ) );
+        	}
+    	}
+
+    	// threshold the image (could alternatively use adaptivThreshold() )
+    	threshold(cv_ptr->image,cv_ptr->image,threshold_value,max_binary_value,threshold_type);
+
 
     	//Display the image using OpenCV in this case just to check that we are getting input
-   	// cv::imshow(WINDOW, processedImage);
-    	cv::reduce(cv_ptr->image, cv_ptr->image, 0, CV_REDUCE_SUM, CV_32S);
+   	    // cv::imshow(WINDOW, processedImage);
 
+        //perform a weighted column wise sum of the pixels
+        if(WEIGHTED_SUM){
+            int heightS = cv_ptr->image.rows;
+            int widthS  = cv_ptr->image.cols;
+            int weightVector[heightS];
 
+            for (int w=0;w<heightS;w++){
+                weightVector[w]=exp(w);
+            }
+              
+            //Transform cv_ptr->image to CV_32FC1 in order for it to be  multipliable
+            cv::Mat WeightsMat = cv::Mat(1, heightS, CV_32FC1 , &weightVector); 
+            cv::Mat resultsMat;
+            cv_ptr->image.convertTo(resultsMat, CV_32FC1);
+            //Multiply and store back
+            resultsMat= WeightsMat*resultsMat;
+            cv_ptr->image=resultsMat;
+
+        }else{
+
+    	   cv::reduce(cv_ptr->image, cv_ptr->image, 0, CV_REDUCE_SUM, CV_32FC1);
+        }
     	//Add some delay in miliseconds.
     	//cv::waitKey(3);
 
@@ -137,56 +145,47 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 
 void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 {
-    WIDTH_START_NOM 	=msg->data[0];
-	WIDTH_START_DENOM 	=msg->data[1];
+        WIDTH_START_NOM 	=msg->data[0];
+    	WIDTH_START_DENOM 	=msg->data[1];
 
-	HEIGHT_START_NOM 	=msg->data[2];
-	HEIGHT_START_DENOM 	=msg->data[3];
+    	HEIGHT_START_NOM 	=msg->data[2];
+    	HEIGHT_START_DENOM 	=msg->data[3];
 
-	WIDTH_NOM 			=msg->data[4];
-	WIDTH_DENOM 		=msg->data[5];
+    	WIDTH_NOM 			=msg->data[4];
+    	WIDTH_DENOM 		=msg->data[5];
 
-	HEIGHT_NOM 			=msg->data[6];
-	HEIGHT_DENOM 		=msg->data[7];
+    	HEIGHT_NOM 			=msg->data[6];
+    	HEIGHT_DENOM 		=msg->data[7];
 }
 
 
 int main(int argc, char **argv)
 {
-    ROS_DEBUG("in main");
+        ROS_DEBUG("in main");
 
-    ros::init(argc, argv, "image_processor");
-    /**
-    * NodeHandle is the main access point to communications with the ROS system.
-    * The first NodeHandle constructed will fully initialize this node, and the last
-    * NodeHandle destructed will close down the node.
-    */
-    ros::NodeHandle nh;
-    //Create an ImageTransport instance, initializing it with our NodeHandle.
-    image_transport::ImageTransport it(nh);
+        ros::init(argc, argv, "image_processor");
+        /**
+        * NodeHandle is the main access point to communications with the ROS system.
+        * The first NodeHandle constructed will fully initialize this node, and the last
+        * NodeHandle destructed will close down the node.
+        */
+        ros::NodeHandle nh;
+        //Create an ImageTransport instance, initializing it with our NodeHandle.
+        image_transport::ImageTransport it(nh);
 
-    cv::namedWindow(WINDOWRAW, CV_WINDOW_AUTOSIZE);
+        cv::namedWindow(WINDOWRAW, CV_WINDOW_AUTOSIZE);
 
-    ros::NodeHandle nparams;
-    ros::Subscriber paramsSub = nparams.subscribe("ROI_params", 1000, paramsCallback);
+        ros::NodeHandle nparams;
+        ros::Subscriber paramsSub = nparams.subscribe("ROI_params", 1000, paramsCallback);
 
-
-    image_transport::Subscriber sub = it.subscribe("/cv_camera/image_raw", 1,   imageCallback);
-    // for bag file:     image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1,   imageCallback);
-
-
-    cv::destroyWindow(WINDOWRAW);
-
-    pub = it.advertise("camera/image_compressed", 10);
+        image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1,   imageCallback);
+        // for bag file:     image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_color", 1,   imageCallback);
 
 
-    //pub = it.advertise("camera/image_processed", 1);
+        cv::destroyWindow(WINDOWRAW);
 
-    /**
-    * In this application all user callbacks will be called from within the ros::spin() call.
-    * ros::spin() will not return until the node has been shutdown, either through a call
-    * to ros::shutdown() or a Ctrl-C.
-    */
-    ros::spin();
+        pub = it.advertise("camera/image_compressed", 10);
+
+        ros::spin();
 
 }

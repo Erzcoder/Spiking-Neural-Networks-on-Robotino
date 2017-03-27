@@ -1,13 +1,14 @@
- //Includes all the headers necessary to use the most common public pieces of the ROS system.
 #include <ros/ros.h>
-//Use image_transport for publishing and subscribing to images in ROS
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-//Include some useful constants for image encoding. Refer to: http://www.ros.org/doc/api/sensor_msgs/html/namespacesensor__msgs_1_1image__encodings.html for more info.
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "std_msgs/Int32MultiArray.h"
+
+//==========================================================================================================================
+// This node implements image preprocessing with population coding by convoluting the image with 3 lines representin filters
+//==========================================================================================================================
 
 //Parameters
 //============================================
@@ -43,7 +44,6 @@ int HEIGHT_DENOM 		=2;
 //Store all constants for image encodings in the enc namespace to be used later.
 namespace enc = sensor_msgs::image_encodings;
  
-//Declare a string with the name of the window that we will create using OpenCV where processed images will be displayed.
 static const char WINDOW[] = "Image Processed";
 static const char WINDOWRAW[] = "Image raw";
 static const char WINDOWTEST[] = "Image test";
@@ -104,79 +104,66 @@ void imageCallback(const sensor_msgs::ImageConstPtr& original_image)
 	//image histogram equalisation
 	equalizeHist(processedImage,processedImage);
 	// threshold the image (could alternatively use adaptivThreshold() ) 
-	//threshold(processedImage,processedImage,threshold_value,max_binary_value,threshold_type);
-	/*int erosion_size=3;
-	int erosion_type=cv::MORPH_RECT;
-	cv::Mat element=getStructuringElement(erosion_type,cv::Size(2*erosion_size+1,2*erosion_size+1),cv::Point(erosion_size,erosion_size));
-	erode(cv_ptr->image,cv_ptr->image,element);*/
+	threshold(processedImage,processedImage,threshold_value,max_binary_value,threshold_type);
+
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
     // neuron population coding
 
-    cv::Mat filterLMat,filterSMat,filterRMat;
-    //left filter
-    float filterL[][5]={{3.0,-1.0,-1.0,0,0},
-                    {-1.0,4,-1,-1,0},
-                    {-1,-1,4,-1,-1},
-                    {0,-1,-1,4,-1},
-                    {0,0,-1,-1,3}};
+    	cv::Mat filterLMat,filterSMat,filterRMat;
+	    //left filter
+	    float filterL[][5]={{3.0,-1.0,-1.0,0,0},
+			    {-1.0,4,-1,-1,0},
+			    {-1,-1,4,-1,-1},
+			    {0,-1,-1,4,-1},
+			    {0,0,-1,-1,3}};
 
-    filterLMat = cv::Mat(5, 5, CV_32FC1, &filterL);
+	    filterLMat = cv::Mat(5, 5, CV_32FC1, &filterL);
 
-    // straight filter
-    float filterS[][5]={{-1,-1,4,-1,-1},
-                    {-1,-1,4,-1,-1},
-                    {-1,-1,4,-1,-1},
-                    {-1,-1,4,-1,-1},
-                    {-1,-1,4,-1,-1}};
+	    // straight filter
+	    float filterS[][5]={{-1,-1,4,-1,-1},
+			    {-1,-1,4,-1,-1},
+			    {-1,-1,4,-1,-1},
+			    {-1,-1,4,-1,-1},
+			    {-1,-1,4,-1,-1}};
 
-    filterSMat = cv::Mat(5, 5, CV_32FC1, &filterS);
+	    filterSMat = cv::Mat(5, 5, CV_32FC1, &filterS);
 
-    //Right filter
-    float filterR[][5]={{0,0,-1,-1,3},
-                    {0,-1,-1,4,-1},
-                    {-1,-1,4,-1,-1},
-                    {-1,4,-1,-1,0},
-                    {3,-1,-1,0,0}};
+	    //Right filter
+	    float filterR[][5]={{0,0,-1,-1,3},
+			    {0,-1,-1,4,-1},
+			    {-1,-1,4,-1,-1},
+			    {-1,4,-1,-1,0},
+			    {3,-1,-1,0,0}};
 
-    filterRMat = cv::Mat(5, 5, CV_32FC1, &filterR);
+	    filterRMat = cv::Mat(5, 5, CV_32FC1, &filterR);
 
-    cv::Mat leftImage,straightImage,rightImage;
-    filter2D(processedImage, leftImage, -1 , filterLMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
-    filter2D(processedImage, rightImage, -1 , filterRMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
-    filter2D(processedImage, straightImage, -1 , filterSMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
+	    cv::Mat leftImage,straightImage,rightImage;
+	    filter2D(processedImage, leftImage, -1 , filterLMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
+	    filter2D(processedImage, rightImage, -1 , filterRMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
+	    filter2D(processedImage, straightImage, -1 , filterSMat, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
 
-    //Display the image using OpenCV
-    cv::imshow(WINDOW, leftImage);
-    cv::imshow(WINDOWRAW, cv_ptr->image);
-
-
-    cv::vconcat(leftImage,straightImage,cv_ptr->image);
-    cv::vconcat(cv_ptr->image,rightImage,cv_ptr->image);
-
-    if(DEVELOP_MODE)
-    cv::imshow(WINDOWTEST, cv_ptr->image);
-     
-    //Add some delay in miliseconds. The function only works if there is at least one HighGUI window created and the window is active. If there are several HighGUI windows, any of them can be active.
-    cv::waitKey(3);
+	    //Display the image using OpenCV
+	    cv::imshow(WINDOW, leftImage);
+	    cv::imshow(WINDOWRAW, cv_ptr->image);
 
 
-    
+	    cv::vconcat(leftImage,straightImage,cv_ptr->image);
+	    cv::vconcat(cv_ptr->image,rightImage,cv_ptr->image);
 
-    
-    /**
-    * The publish() function is how you send messages. The parameter
-    * is the message object. The type of this object must agree with the type
-    * given as a template parameter to the advertise<>() call, as was done
-    * in the constructor in main().
-    */
-    //Convert the CvImage to a ROS image message and publish it on the "camera/image_processed" topic.
-    pub.publish(cv_ptr->toImageMsg());
+	    if(DEVELOP_MODE)
+	    cv::imshow(WINDOWTEST, cv_ptr->image);
+
+	    //Add some delay in miliseconds. The function only works if there is at least one HighGUI window created and the window is active. If there are several HighGUI windows, any of them can be active.
+	    cv::waitKey(3);
+
+	    //Convert the CvImage to a ROS image message and publish it on the "camera/image_processed" topic.
+	    pub.publish(cv_ptr->toImageMsg());
 }
 
 void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 {
-    WIDTH_START_NOM 	=msg->data[0];
+    	WIDTH_START_NOM 	=msg->data[0];
 	WIDTH_START_DENOM 	=msg->data[1];
 
 	HEIGHT_START_NOM 	=msg->data[2];
@@ -188,20 +175,13 @@ void paramsCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 	HEIGHT_NOM 			=msg->data[6];
 	HEIGHT_DENOM 		=msg->data[7];
 }
- 
-/**
-* This tutorial demonstrates simple image conversion between ROS image message and OpenCV formats and image processing
-*/
+
 int main(int argc, char **argv)
 {
     ROS_DEBUG("in main");
    
     ros::init(argc, argv, "image_processor");
-    /**
-    * NodeHandle is the main access point to communications with the ROS system.
-    * The first NodeHandle constructed will fully initialize this node, and the last
-    * NodeHandle destructed will close down the node.
-    */
+
     ros::NodeHandle nh;
     //Create an ImageTransport instance, initializing it with our NodeHandle.
     image_transport::ImageTransport it(nh);
@@ -223,11 +203,7 @@ int main(int argc, char **argv)
     
     
     pub = it.advertise("camera/image_processed", 1);
-    /**
-    * In this application all user callbacks will be called from within the ros::spin() call.
-    * ros::spin() will not return until the node has been shutdown, either through a call
-    * to ros::shutdown() or a Ctrl-C.
-    */
+
     ros::spin();
     //ROS_INFO is the replacement for printf/cout.
     ROS_INFO("image preprocessing node::main.cpp::No error.");
